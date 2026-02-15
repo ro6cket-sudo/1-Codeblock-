@@ -24,20 +24,48 @@ class Parser {
         }
     }
 
-    ChekToken(type,value = null) {
-        return this.currentToken.type === type && (value === null || this.currentToken.value === value);
+    parse()
+    {
+        return praseExpression()
     }
 
-    Pars(type, value = null) {
-        if (this.ChekToken(type, value)) {
-            const token = this.currentToken;
+    parseExpression() {
+        let node = this.parseMultiplication();
+        while (this.currentToken.type === TokenTypes.OPERATION && ['+', '-'].includes(this.currentToken.value)) {
+            let operation = this.currentToken.value;
             this.NextToken();
-            return token;
+            node = new BinaryOperationNode(operation, node, );
         }
-        this.error(`Ожидался токен ${type}${value}`);
+        return node;
     }
 
-    error(massage){
-        throw new Error(massage);
+    parseMultiplication() {
+        let node = this.parseLiteral();
+        while (this.currentToken.type === TokenTypes.OPERATION && ['*', '/', '%'].includes(this.currentToken.value)) {let operation = this.currentToken.value;
+            let oper = this.currentToken.value;
+            this.NextToken();
+            node = new BinaryOperationNode(oper, node, this.parseMultiplication());
+        }
+        return node;
+    }
+
+    parseLiteral() {
+        if(this.currentToken.type === TokenTypes.OPENPARENTHIST){
+            this.nextToken();
+            let node = this.parseExpression();
+            this.nextToken;
+            return node;
+        }
+        if(this.currentToken.type === TokenTypes.NUMBER){
+            let token = this.currentToken;
+            this.NextToken();
+            return new NumberNode(token.value);
+        }
+        if(this.currentToken.type === TokenTypes.VARIABLE)
+        {
+            let token = this.currentToken;
+            this.NextToken();
+            return new VariableNode(token.value);
+        }
     }
 }
