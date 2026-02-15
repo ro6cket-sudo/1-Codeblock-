@@ -4,7 +4,7 @@ import NumberNode from '.ast'
 import VariableNode from '.ast'
 import BinaryOperationNode from '.ast'
 
-class Parser {
+export class Parser {
     tokens = [];
     position;
     currentToken;
