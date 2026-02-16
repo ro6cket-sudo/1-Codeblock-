@@ -1,6 +1,6 @@
-import {addBlock} from './ManageInstructionsBlocks'
+import {addBlock} from './ManageInstructionsBlocks.js'
 
-instructionsbuttons = document.querySelectorAll('.instruction');
+const instructionsbuttons = document.querySelectorAll('.instruction');
 instructionsbuttons.forEach(button => {
     button.addEventListener('click', () => {
         const type = button.dataset.blockType;

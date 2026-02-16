@@ -1,18 +1,18 @@
-import {CodeBlock} from './CodeBlock';
-import {CreateHtmInstructionlBlock} from './CreateHtmInstructionlBlock';
+import {CodeBlock} from './CodeBlock.js';
+import {createHTMLInstructionBlock} from './CreateHTMLInstructionBlock.js';
 
-export const blocks = Map;
+export const blocks = new Map();
 
 export function addBlock(type) {
     const id = crypto.randomUUID()
-    const worckspace = document.querySelector(".worckspace");
+    const workspace = document.querySelector(".workspace");
 
-    const codeBlock = new CodeBlock(id, worckspace);
+    const codeBlock = new CodeBlock(id, workspace);
     blocks.set(id, codeBlock);
 
-    const htmlBlock = CreateHtmInstructionlBlock(id, type);
-    addBlock(htmlBlock);
-    worckspace.append(htmlBlock);
+    const htmlBlock = createHTMLInstructionBlock(id, type);
+    addEvents(codeBlock, htmlBlock);
+    workspace.append(htmlBlock);
 }
 
 function addEvents(block, htmlBlock) {
@@ -21,6 +21,7 @@ function addEvents(block, htmlBlock) {
 
     input.addEventListener('input', function(e) {
         block.parameters['value'] = e.target.value;
+        console.log(block.parameters['value']);
     })
 
     deleteButton.addEventListener('click', function() {
