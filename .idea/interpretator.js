@@ -14,7 +14,7 @@ export class Interpretator {
 
         if (node.type === 'Variable')
         {
-            if (!(naode.name in this.variables))
+            if (!(node.name in this.variables))
                 throw new Error(`Переменная${node.name} не обноружена`);
             return this.variables[node.name];
         }
@@ -27,8 +27,12 @@ export class Interpretator {
                 case '+': return left + right;
                 case '-': return left - right;
                 case '*': return left * right;
-                case '/': return left / right;
-                case '%': return left % right;
+                case '/':
+                    if (right === 0) throw new Error("Деление на 0");
+                    return left / right;
+                case '%':
+                    if (right === 0) throw new Error("Остаток от деления на 0");
+                    return left % right;
             }
         }
     }

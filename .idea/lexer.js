@@ -1,7 +1,4 @@
-import TokenTypes from './tokens';
-import Token from './tokens';
-import tokenRules from './tokens';
-
+import {TokenTypes, tokenRules, Token} from '.tokens';
 
 export class Lexer {
 
@@ -12,18 +9,18 @@ export class Lexer {
     }
 
     AddTocens(){
-        if (this.position >= code.length) {
+        if (this.position >= this.input_code.length) {
             return false;
         }
 
-        const analysysCode = this.code.slice(this.position);
+        const analysysCode = this.input_code.slice(this.position);
 
         for (let i = 0; i < tokenRules.length; i++) {
-            const matchSubStrings = this.code.match(tokenRules[i].regex);
+            const matchSubStrings = analysysCode.match(tokenRules[i].regex);
             if (matchSubStrings) {
                 const token = new Token(tokenRules[i].type, matchSubStrings[0], this.position);
                 this.position += matchSubStrings[0].length;
-                this.tokenList.push(token);
+                this.tokensList.push(token);
                 return true;
             }
         }
@@ -32,6 +29,6 @@ export class Lexer {
     Analys() {
         while (this.AddTocens()) {}
         this.tokensList.push(new Token());
-        return this.tocenList;
+        return this.tokensList;
     }
 }

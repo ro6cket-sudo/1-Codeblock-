@@ -20,13 +20,14 @@ export class Parser {
         if (this.position < this.tokens.length) {
             this.currentToken = this.tokens[this.position];
         } else {
-            this.currentToken = new Token(TokenTypes.ENDOFEXPRESS, null, this.tokens[this.position.length - 1].position || 0);
+            const last = this.tokens.length > 0 ? this.tokens[this.tokens.length - 1].position : 0;
+            this.currentToken = new Token(TokenTypes.ENDOFEXPRESS, null, last);
         }
     }
 
     parse()
     {
-        return praseExpression()
+        return this.parseExpression();
     }
 
     parseExpression() {
@@ -34,7 +35,7 @@ export class Parser {
         while (this.currentToken.type === TokenTypes.OPERATION && ['+', '-'].includes(this.currentToken.value)) {
             let operation = this.currentToken.value;
             this.NextToken();
-            node = new BinaryOperationNode(operation, node, );
+            node = new BinaryOperationNode(operation, node, this.parseMultiplication());
         }
         return node;
     }
@@ -44,17 +45,22 @@ export class Parser {
         while (this.currentToken.type === TokenTypes.OPERATION && ['*', '/', '%'].includes(this.currentToken.value)) {let operation = this.currentToken.value;
             let oper = this.currentToken.value;
             this.NextToken();
-            node = new BinaryOperationNode(oper, node, this.parseMultiplication());
+            node = new BinaryOperationNode(oper, node, this.parseLiteral());
         }
         return node;
     }
 
     parseLiteral() {
         if(this.currentToken.type === TokenTypes.OPENPARENTHIST){
-            this.nextToken();
+            this.NextToken();
             let node = this.parseExpression();
-            this.nextToken;
-            return node;
+            if (this.currentToken.type === TokenTypes.CLOSEPARENTHIST) {
+                this.NextToken();
+                return node;
+            }
+            else{
+                throw new Error("Ожидалась ')'");
+            }
         }
         if(this.currentToken.type === TokenTypes.NUMBER){
             let token = this.currentToken;
@@ -67,5 +73,7 @@ export class Parser {
             this.NextToken();
             return new VariableNode(token.value);
         }
+
+        throw new Error(`Неизвестный токен: ${this.currentToken.value}`);
     }
 }
