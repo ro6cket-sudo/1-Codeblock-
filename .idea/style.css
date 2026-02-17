@@ -84,7 +84,7 @@ body{
 
 .workspace {
     flex: 1;
-    background-color: #dba8ff;
+    background-color: #f4e5ff;
     padding: 10px;
     overflow-y: auto;
     gap: 10px;
@@ -104,4 +104,57 @@ body{
     padding: 10px;
     overflow-y: auto;
 
+}
+
+.block{
+    display: flex;
+    border-radius: 5px;
+    cursor: grab;
+    position: absolute;
+    gap: 10px;
+    padding: 10px;
+}
+
+.block:hover{
+    background-color: #50345e;
+}
+
+.block[data-type="variable"]{
+    background-color: #04cafc;
+    border: 1px solid #eb04fc;
+}
+
+.block[data-type="assignment"]{
+    background-color: #fc8804;
+    border: 1px solid #57fc04;
+}
+
+.block[data-type="if-else"]{
+    background-color: #04cafc;
+    border: 1px solid #eb04fc;
+}
+
+.block[data-type="while"]{
+    background-color: #04cafc;
+    border: 1px solid #eb04fc;
+}
+
+.block[data-type="for"]{
+    background-color: #04cafc;
+    border: 1px solid #eb04fc;
+}
+
+.block[data-type="array"]{
+    background-color: #04cafc;
+    border: 1px solid #eb04fc;
+}
+
+.block[data-type="input"]{
+    background-color: #04cafc;
+    border: 1px solid #eb04fc;
+}
+
+.block[data-type="output"]{
+    background-color: #fcdb04;
+    border: 1px solid #50345e;
 }

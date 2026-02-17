@@ -1,18 +1,13 @@
-export function createHTMLInstructionBlock(id, type) {
+export function createHTMLInstructionBlock(codeBlock) {
     const block = document.createElement("div");
     block.className = "block";
-    block.dataset.id = id;
-    block.style.width = "30px";
-    block.style.height = "30px";
+    block.dataset.id = codeBlock.id;
+    block.dataset.type = codeBlock.type;
 
-    const deleteButton = document.createElement("button");
-    deleteButton.className = "delete_button";
-    deleteButton.textContent = 'x';
+    block.innerHTML =`
+        <h4 class="blockName">${codeBlock.type}</h4>
+        <input class"code-input">
+        <button class="delete_button">X</button>`;
 
-    const input = document.createElement("input");
-    input.className = "code-input";
-
-    block.appendChild(input);
-    block.appendChild(deleteButton);
     return block;
 }
