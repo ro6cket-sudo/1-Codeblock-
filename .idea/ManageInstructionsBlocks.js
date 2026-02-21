@@ -16,6 +16,20 @@ export function addBlock(type) {
     workspace.append(htmlBlock);
 }
 
+export function addBlockAtPosition(type, targetPlaceholder) {
+    const id = crypto.randomUUID();
+    const codeBlock = new CodeBlock(id, type);
+    blocks.set(id, codeBlock);
+
+    const htmlBlock = createHTMLInstructionBlock(codeBlock);
+    addEvents(codeBlock, htmlBlock);
+
+    targetPlaceholder.replaceWith(htmlBlock);
+
+    return htmlBlock;
+
+}
+
 function addEvents(block, htmlBlock) {
     const input = htmlBlock.querySelector('input');
     const deleteButton = htmlBlock.querySelector('.delete_button');
