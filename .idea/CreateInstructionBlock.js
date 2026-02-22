@@ -1,4 +1,4 @@
-import {addBlock, addBlockAtPosition} from './ManageInstructionsBlocks.js'
+import {addBlockAtPosition, clearAllBlocks} from './ManageInstructionsBlocks.js'
 import { createHTMLInstructionBlock } from './CreateHTMLInstructionBlock.js';
 
 document.addEventListener('dragstart', (e) => {
@@ -9,6 +9,15 @@ const instructionsbuttons = document.querySelectorAll('.instruction');
 const workspace = document.querySelector('.workspace')
 const placeholder = document.createElement('div');
 placeholder.className = 'placeholder';
+
+const clearButton = document.getElementById('clear-workspace');
+if (clearButton) {
+    clearButton.addEventListener('click', () => {
+        if (confirm("Вы уверены, что хотите удалить все блоки?")) {
+            clearAllBlocks();
+        }
+    });
+}
 
 let ghost = null;
 let currentType = null;

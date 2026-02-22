@@ -45,3 +45,11 @@ function addEvents(block, htmlBlock) {
         blocks.delete(block.id);
     })
 }
+
+export function clearAllBlocks() {
+    const workspace = document.querySelector(".workspace");
+    if (workspace) {
+        workspace.innerHTML = '';
+    }
+    blocks.clear();
+}
