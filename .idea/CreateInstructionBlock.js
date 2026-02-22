@@ -1,4 +1,4 @@
-import {addBlockAtPosition, clearAllBlocks} from './ManageInstructionsBlocks.js'
+import {addBlockAtPosition, clearAllBlocks, blocks} from './ManageInstructionsBlocks.js'
 import { createHTMLInstructionBlock } from './CreateHTMLInstructionBlock.js';
 
 document.addEventListener('dragstart', (e) => {
@@ -8,6 +8,7 @@ document.addEventListener('dragstart', (e) => {
 const instructionsbuttons = document.querySelectorAll('.instruction');
 const workspace = document.querySelector('.workspace')
 const placeholder = document.createElement('div');
+const trashBin = document.getElementById('trash-bin');
 placeholder.className = 'placeholder';
 
 const clearButton = document.getElementById('clear-workspace');
@@ -108,42 +109,66 @@ function onMouseMove(e) {
     moveAt(e.pageX, e.pageY);
 
     const workspaceRect = workspace.getBoundingClientRect();
+    const trashRect = trashBin.getBoundingClientRect();
 
-    if (
-        e.clientX > workspaceRect.left && e.clientX < workspaceRect.right &&
-        e.clientY > workspaceRect.top && e.clientY < workspaceRect.bottom
-    ) {
-        const afterElement = getDragAfterElement(workspace, e.clientY);
-        if (afterElement == null) {
-            workspace.appendChild(placeholder);
-        } else {
-            workspace.insertBefore(placeholder, afterElement);
-        }
+    const isOverTrash = (
+        e.clientX > trashRect.left && e.clientX < trashRect.right &&
+        e.clientY > trashRect.top && e.clientY < trashRect.bottom
+    );
+
+    if (isOverTrash) {
+        trashBin.classList.add('hover');
+        if (placeholder.parentNode) placeholder.remove();
     } else {
-        if (placeholder.parentNode === workspace) {
-            placeholder.remove();
+        trashBin.classList.remove('hover');
+        if (
+            e.clientX > workspaceRect.left && e.clientX < workspaceRect.right &&
+            e.clientY > workspaceRect.top && e.clientY < workspaceRect.bottom
+        ) {
+            const afterElement = getDragAfterElement(workspace, e.clientY);
+            if (afterElement == null) {
+                workspace.appendChild(placeholder);
+            } else {
+                workspace.insertBefore(placeholder, afterElement);
+            }
+        } else {
+            if (placeholder.parentNode === workspace) {
+                placeholder.remove();
+            }
         }
     }
+
 }
 
 function onMouseUp(e) {
     document.body.classList.remove('dragging');
+    
+    if (trashBin.classList.contains('hover')) {
+        if (draggingMode === 'move' && draggedBlock) {
+            const id = draggedBlock.dataset.id;
+            blocks.delete(id);
+            draggedBlock.remove();
+        }
+       if (placeholder.parentNode) placeholder.remove();
+    }
+    else {
+        if (draggingMode === 'new') {
+            if (placeholder.parentNode === workspace) {
+                addBlockAtPosition(currentType, placeholder);
+            } else {
+                placeholder.remove();
+            }
+        } else if (draggingMode === 'move') {
+            if (placeholder.parentNode === workspace) {
+                workspace.insertBefore(draggedBlock, placeholder);
+            }
 
-    if (draggingMode === 'new') {
-        if (placeholder.parentNode === workspace) {
-            addBlockAtPosition(currentType, placeholder);
-        } else {
+            draggedBlock.style.display = '';
             placeholder.remove();
         }
-    } else if (draggingMode === 'move') {
-        if (placeholder.parentNode === workspace) {
-            workspace.insertBefore(draggedBlock, placeholder);
-        }
-
-        draggedBlock.style.display = '';
-        placeholder.remove();
     }
 
+    trashBin.classList.remove('hover');
     if (ghost) {
         ghost.remove();
         ghost = null;
