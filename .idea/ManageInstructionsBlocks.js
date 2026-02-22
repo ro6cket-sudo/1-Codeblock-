@@ -10,7 +10,6 @@ export function addBlock(type) {
     const codeBlock = new CodeBlock(id, type);
     blocks.set(id, codeBlock);
 
-    // const htmlBlock = createHTMLInstructionBlock(id, type);
     const htmlBlock = createHTMLInstructionBlock(codeBlock);
     addEvents(codeBlock, htmlBlock);
     workspace.append(htmlBlock);
@@ -26,8 +25,22 @@ export function addBlockAtPosition(type, targetPlaceholder) {
 
     targetPlaceholder.replaceWith(htmlBlock);
 
-    return htmlBlock;
+    updateNestedContainer(htmlBlock.parentElement);
+}
 
+export function updateNestedContainer(container) {
+    if (!container || !container.classList || !container.classList.contains('nested-workspace')) {
+        return;
+    }
+
+    const hasBlocks = Array.from(container.children).some(child =>
+        child.classList && child.classList.contains('block'));
+
+    if (hasBlocks) {
+        container.classList.add('has-blocks');
+    } else {
+        container.classList.remove('has-blocks');
+    }
 }
 
 function addEvents(block, htmlBlock) {
@@ -41,8 +54,10 @@ function addEvents(block, htmlBlock) {
     })
 
     deleteButton.addEventListener('click', function() {
+        const parentContainer = htmlBlock.parentElement;
         htmlBlock.remove();
         blocks.delete(block.id);
+        updateNestedContainer(parentContainer);
     })
 }
 

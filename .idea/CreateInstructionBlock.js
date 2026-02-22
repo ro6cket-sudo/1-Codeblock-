@@ -1,4 +1,4 @@
-import {addBlockAtPosition, clearAllBlocks, blocks} from './ManageInstructionsBlocks.js'
+import {addBlockAtPosition, clearAllBlocks, blocks, updateNestedContainer} from './ManageInstructionsBlocks.js'
 import { createHTMLInstructionBlock } from './CreateHTMLInstructionBlock.js';
 
 document.addEventListener('dragstart', (e) => {
@@ -8,8 +8,9 @@ document.addEventListener('dragstart', (e) => {
 const instructionsbuttons = document.querySelectorAll('.instruction');
 const workspace = document.querySelector('.workspace')
 const placeholder = document.createElement('div');
-const trashBin = document.getElementById('trash-bin');
 placeholder.className = 'placeholder';
+
+const trashBin = document.getElementById('trash-bin');
 
 const clearButton = document.getElementById('clear-workspace');
 if (clearButton) {
@@ -25,6 +26,7 @@ let currentType = null;
 
 let draggingMode = null;
 let draggedBlock = null;
+let origContainer = null;
 
 instructionsbuttons.forEach(button => {
     button.addEventListener('mousedown', (e) => {
@@ -58,6 +60,7 @@ workspace.addEventListener('mousedown', (e) => {
 
     draggingMode = 'move';
     draggedBlock = block;
+    origContainer = block.parentElement;
     currentType = block.dataset.type;
 
     ghost = block.cloneNode(true);
@@ -72,8 +75,12 @@ workspace.addEventListener('mousedown', (e) => {
 
 
 function getDragAfterElement(container, y) {
-    const draggableElements = [... container.querySelectorAll('.block:not(.ghost)')]
-        .filter(el => el.style.display !== 'none');
+    const draggableElements = [... container.children]
+        .filter(el =>
+            el.classList.contains('block') &&
+            !el.classList.contains('ghost') &&
+            el.style.display !== 'none'
+        );
 
     return draggableElements.reduce((closest, child) => {
         const box = child.getBoundingClientRect();
@@ -88,14 +95,14 @@ function getDragAfterElement(container, y) {
 }
 
 
-function setupGhost(ghostElement, x, y) {
-    ghostElement.classList.add('ghost');
-    ghostElement.style.position = 'fixed';
-    ghostElement.style.pointerEvents = 'none';
-    ghostElement.style.opacity = '0.6';
-    ghostElement.style.zIndex = '1000';
+function setupGhost(ghostEl, x, y) {
+    ghostEl.classList.add('ghost');
+    ghostEl.style.position = 'fixed';
+    ghostEl.style.pointerEvents = 'none';
+    ghostEl.style.opacity = '0.6';
+    ghostEl.style.zIndex = '1000';
 
-    document.body.appendChild(ghostElement);
+    document.body.appendChild(ghostEl);
     moveAt(x, y);
 }
 
@@ -108,7 +115,9 @@ function moveAt(x, y) {
 function onMouseMove(e) {
     moveAt(e.pageX, e.pageY);
 
-    const workspaceRect = workspace.getBoundingClientRect();
+    const elementUnderCursor = document.elementFromPoint(e.clientX, e.clientY);
+    const activeContainer = elementUnderCursor ? elementUnderCursor.closest('.workspace, .nested-workspace') : null;
+
     const trashRect = trashBin.getBoundingClientRect();
 
     const isOverTrash = (
@@ -121,23 +130,21 @@ function onMouseMove(e) {
         if (placeholder.parentNode) placeholder.remove();
     } else {
         trashBin.classList.remove('hover');
-        if (
-            e.clientX > workspaceRect.left && e.clientX < workspaceRect.right &&
-            e.clientY > workspaceRect.top && e.clientY < workspaceRect.bottom
-        ) {
-            const afterElement = getDragAfterElement(workspace, e.clientY);
+        
+        if (activeContainer) {
+            const afterElement = getDragAfterElement(activeContainer, e.clientY);
+            
             if (afterElement == null) {
-                workspace.appendChild(placeholder);
+                activeContainer.appendChild(placeholder);
             } else {
-                workspace.insertBefore(placeholder, afterElement);
+                activeContainer.insertBefore(placeholder, afterElement);
             }
         } else {
-            if (placeholder.parentNode === workspace) {
+            if (placeholder.parentNode) {
                 placeholder.remove();
             }
-        }
-    }
-
+        }  
+    } 
 }
 
 function onMouseUp(e) {
@@ -149,18 +156,20 @@ function onMouseUp(e) {
             blocks.delete(id);
             draggedBlock.remove();
         }
-       if (placeholder.parentNode) placeholder.remove();
+        if (placeholder.parentNode) placeholder.remove();
     }
     else {
         if (draggingMode === 'new') {
-            if (placeholder.parentNode === workspace) {
+            if (placeholder.parentNode) {
                 addBlockAtPosition(currentType, placeholder);
-            } else {
-                placeholder.remove();
             }
         } else if (draggingMode === 'move') {
-            if (placeholder.parentNode === workspace) {
-                workspace.insertBefore(draggedBlock, placeholder);
+            if (placeholder.parentNode) {
+                const newContainer = placeholder.parentNode;
+                newContainer.insertBefore(draggedBlock, placeholder);
+
+                updateNestedContainer(origContainer);
+                updateNestedContainer(newContainer);
             }
 
             draggedBlock.style.display = '';
@@ -169,6 +178,7 @@ function onMouseUp(e) {
     }
 
     trashBin.classList.remove('hover');
+
     if (ghost) {
         ghost.remove();
         ghost = null;
@@ -176,6 +186,7 @@ function onMouseUp(e) {
 
     draggedBlock = null;
     draggingMode = null;
+    origContainer = null;
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);

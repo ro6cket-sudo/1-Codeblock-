@@ -20,6 +20,73 @@ body.dragging {
     min-height: 0;
 }
 
+.container-block {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    gap: 0;
+}
+
+.block-header {
+    background-color: #04cafc;
+    border: 1px solid #eb04fc;
+    padding: 10px;
+    border-radius: 5px 5px 5px 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: fit-content;
+    min-width: 400px;
+    height: auto;
+}
+
+.container-block .block-header{
+    min-width: 400px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    border-radius: 5px 5px 5px 0;
+}
+
+.block-footer {
+    height: 10px;
+    min-width: 400px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #04cafc;
+    border-radius: 0 5px 5px 5px;
+    border: 1px solid #eb04fc;
+}
+
+.container-block .block-footer{
+    width: 100%;
+}
+
+.nested-workspace {
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 40px;
+    padding: 0 0 0 20px;
+    border-left: 6px solid #04cafc;
+    border-bottom: none;
+    border-right: none;
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: auto !important;
+    background: transparent;
+}
+
+.nested-workspace .block, .workspace .block{
+    pointer-events: auto;
+}
+
 .toolbar{
     background-color: #8cc5b6;
     color: aliceblue;
@@ -57,7 +124,7 @@ body.dragging {
 
 }
 
-.block *, .instruction * {
+.block > *:not(.nested-workspace), .instruction * {
     pointer-events: none;
 }
 
