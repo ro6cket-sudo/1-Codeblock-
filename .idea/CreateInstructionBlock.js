@@ -15,9 +15,7 @@ const trashBin = document.getElementById('trash-bin');
 const clearButton = document.getElementById('clear-workspace');
 if (clearButton) {
     clearButton.addEventListener('click', () => {
-        if (confirm("Вы уверены, что хотите удалить все блоки?")) {
-            clearAllBlocks();
-        }
+        clearAllBlocks();
     });
 }
 

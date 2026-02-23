@@ -230,9 +230,10 @@ body.dragging {
 .placeholder {
     background-color: #0000001a;
     border: 2px dashed #999;
-    border-radius: 5px;
+    border-radius: 15px;
     height: 80px;
     width: 400px;
+    min-height: 20px;
     flex-shrink: 0;
 }
 
@@ -262,18 +263,58 @@ body.dragging {
     pointer-events: none;
 }
 
-.block, .instruction {
+.block .instruction {
     user-select: none;
 }
 
-.block[data-type="variable"]{
-    background-color: #04cafc;
-    border: 1px solid #eb04fc;
+.block-variable, 
+.block-assignment {
+    border-radius: 15px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 200px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
 }
 
-.block[data-type="assignment"]{
-    background-color: #fc8804;
-    border: 1px solid #57fc04;
+.block-assignment {
+    background-color: #ffe082;
+    border: 2px solid #ffb300;
+}
+
+.block-variable {
+    background-color: #b2f2bb;
+    border: 2px solid #51cf66;
+}
+
+.block-variable .input-container,
+.block-assignment .input-container {
+    background-color: #495057;
+    padding: 3px;
+    border-radius: 8px;
+    display: flex;
+    overflow: hidden;
+}
+
+.block-variable input,
+.block-assignment input {
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: white;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.block-assignment .var-name-frame {
+    width: 60px;
+    flex-shrink: 0;
+}
+
+.block-assignment .var-value-frame {
+    flex-grow: 1;
 }
 
 .block[data-type="if-else"]{

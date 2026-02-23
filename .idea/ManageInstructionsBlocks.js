@@ -45,19 +45,11 @@ export function updateNestedContainer(container) {
 
 function addEvents(block, htmlBlock) {
     const input = htmlBlock.querySelector('input');
-    const deleteButton = htmlBlock.querySelector('.delete_button');
     const workspace = document.querySelector('.workspace');
 
     input.addEventListener('input', function(e) {
         block.parameters['value'] = e.target.value;
         console.log(block.parameters['value']);
-    })
-
-    deleteButton.addEventListener('click', function() {
-        const parentContainer = htmlBlock.parentElement;
-        htmlBlock.remove();
-        blocks.delete(block.id);
-        updateNestedContainer(parentContainer);
     })
 }
 

@@ -12,10 +12,33 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
         block.innerHTML = `
         <div class="block-header">
             <h4 class="blockName">${codeBlock.type}</h4>
-            ${!isGhost ? '<input class="code-input"><button class="delete_button">X</button>' : ''}
+            ${!isGhost ? '<input class="code-input">' : ''}
         </div>
         <div class="nested-workspace"></div>
         <div class="block-footer"></div>
+        `;
+    } else if (codeBlock.type === 'variable') {
+        block.classList.add('block-variable');
+        if (isGhost) block.classList.add('ghost');
+        
+        block.innerHTML = `
+            <span class="variable-label">variable</span>
+            <div class="input-container">
+                <input type="text" class="variable-input" ${isGhost ? 'disabled' : ''}>
+            </div>
+        `;
+    } else if (codeBlock.type === 'assignment'){
+        block.classList.add('block-assignment');
+        if (isGhost) block.classList.add('ghost');
+        
+        block.innerHTML = `
+            <span class="assignment-label">assignment</span>
+            <div class="input-container var-name-frame">
+                <input type="text" class="variable-input" ${isGhost ? 'disabled' : ''}>
+            </div>
+            <div class="input-container var-value-frame">
+                <input type="text" class="variable-input" ${isGhost ? 'disabled' : ''}>
+            </div>
         `;
     } else {
         block.innerHTML = `
@@ -24,7 +47,6 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
         if (!isGhost) {
             block.innerHTML += `
                 <input class="code-input">
-                <button class="delete_button">X</button>
             `;}
     }
     
