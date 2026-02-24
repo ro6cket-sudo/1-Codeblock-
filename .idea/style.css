@@ -216,6 +216,7 @@ body.dragging {
     background-color: #8cc5b6;
     border-radius: 10px;
     padding: 10px;
+    border: 2px solid #279c89;
     overflow-y: auto;
 }
 

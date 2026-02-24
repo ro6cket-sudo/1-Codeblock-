@@ -6,6 +6,8 @@ export class ConsoleLogger {
     clear() {
         if (this.element) {
             this.element.innerHTML = '';
+        }else {
+            this.element = document.getElementById('console-log');
         }
     }
 
