@@ -1,4 +1,4 @@
-import {addBlockAtPosition, clearAllBlocks, blocks, updateNestedContainer} from './ManageInstructionsBlocks.js'
+import { addBlockAtPosition, clearAllBlocks, blocks, updateNestedContainer, sortBlocks, removeBlockWithNestedWorkspace } from './ManageInstructionsBlocks.js'
 import { createHTMLInstructionBlock } from './CreateHTMLInstructionBlock.js';
 
 document.addEventListener('dragstart', (e) => {
@@ -24,6 +24,7 @@ let currentType = null;
 
 let draggingMode = null;
 let draggedBlock = null;
+let draggedElse = null;
 let origContainer = null;
 
 instructionsbuttons.forEach(button => {
@@ -48,7 +49,7 @@ instructionsbuttons.forEach(button => {
 
 workspace.addEventListener('mousedown', (e) => {
     if (e.button !== 0) return;
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
+    if (e.target.tagName === 'INPUT') return;
 
     const block = e.target.closest('.block');
     if (!block) return;
@@ -60,6 +61,15 @@ workspace.addEventListener('mousedown', (e) => {
     draggedBlock = block;
     origContainer = block.parentElement;
     currentType = block.dataset.type;
+
+    if (block.dataset.type === 'if') {
+        let next = block.nextElementSibling;
+
+        if (next && next.dataset.type === 'else') {
+            draggedElse = next;
+            draggedElse.style.display = 'none';
+        }
+    }
 
     ghost = block.cloneNode(true);
     setupGhost(ghost, e.pageX, e.pageY);
@@ -73,18 +83,45 @@ workspace.addEventListener('mousedown', (e) => {
 
 
 function getDragAfterElement(container, y) {
-    const draggableElements = [... container.children]
+    let draggableElements = [... container.children]
         .filter(el =>
             el.classList.contains('block') &&
             !el.classList.contains('ghost') &&
             el.style.display !== 'none'
         );
 
+    if (currentType === 'else') {
+        let bestIF = null;
+        let bestOffset = Number.POSITIVE_INFINITY;
+
+        draggableElements.forEach(child => {
+            if (child.dataset.type !== 'if') return;
+
+            const box = child.getBoundingClientRect();
+            const offset = Math.abs(y - box.bottom);
+
+            if (offset < bestOffset) {
+                let next = child.nextElementSibling;
+                
+                if (!next || next.dataset.type !== 'else' || next === draggedBlock) {
+                    bestIF = child;
+                    bestOffset = offset;
+                }
+            }
+        });
+
+        return bestIF;
+    }
+        
     return draggableElements.reduce((closest, child) => {
         const box = child.getBoundingClientRect();
         const offset = y - box.top - box.height / 2;
 
         if (offset < 0 && offset > closest.offset) {
+            const prev = child.previousElementSibling;
+            if (prev && prev.dataset.type === 'if' && child.dataset.type === 'else') {
+                return closest;
+            }
             return {offset: offset, element: child };
         } else {
             return closest;
@@ -132,11 +169,22 @@ function onMouseMove(e) {
         if (activeContainer) {
             const afterElement = getDragAfterElement(activeContainer, e.clientY);
             
-            if (afterElement == null) {
-                activeContainer.appendChild(placeholder);
+            if (currentType === 'else') {
+                if (afterElement == null) {
+                    if (placeholder.parentNode) {
+                        placeholder.remove();
+                    }
+                } else {
+                    activeContainer.insertBefore(placeholder, afterElement.nextSibling);
+                }
             } else {
-                activeContainer.insertBefore(placeholder, afterElement);
+                if (afterElement == null) {
+                    activeContainer.appendChild(placeholder);
+                } else {
+                    activeContainer.insertBefore(placeholder, afterElement);
+                }
             }
+
         } else {
             if (placeholder.parentNode) {
                 placeholder.remove();
@@ -150,9 +198,14 @@ function onMouseUp(e) {
     
     if (trashBin.classList.contains('hover')) {
         if (draggingMode === 'move' && draggedBlock) {
-            const id = draggedBlock.dataset.id;
-            blocks.delete(id);
-            draggedBlock.remove();
+            if (draggedElse) {
+                removeBlockWithNestedWorkspace(draggedElse);
+                draggedElse = null;
+            }
+
+            removeBlockWithNestedWorkspace(draggedBlock);
+
+            console.table(Array.from(blocks.values()), ['id', 'type'])
         }
         if (placeholder.parentNode) placeholder.remove();
     }
@@ -160,18 +213,33 @@ function onMouseUp(e) {
         if (draggingMode === 'new') {
             if (placeholder.parentNode) {
                 addBlockAtPosition(currentType, placeholder);
+                currentType = null;
+                console.table(Array.from(blocks.values()), ['id', 'type'])
             }
         } else if (draggingMode === 'move') {
             if (placeholder.parentNode) {
                 const newContainer = placeholder.parentNode;
                 newContainer.insertBefore(draggedBlock, placeholder);
 
+                if (draggedElse) {
+                    newContainer.insertBefore(draggedElse, draggedBlock.nextSibling);
+                    draggedElse.style.display = '';
+                }
+                
                 updateNestedContainer(origContainer);
                 updateNestedContainer(newContainer);
             }
 
             draggedBlock.style.display = '';
+
+            if (draggedElse) {
+                draggedElse.style.display = '';
+                draggedElse = null;
+            }
+
             placeholder.remove();
+            sortBlocks();
+            console.table(Array.from(blocks.values()), ['id', 'type'])
         }
     }
 
