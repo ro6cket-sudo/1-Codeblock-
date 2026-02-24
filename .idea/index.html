@@ -9,7 +9,7 @@
     <div class="codeblock">
 
         <div class="toolbar">
-            <button type="button">Запустить</button>
+            <button type="button" id="run-btn">Запустить</button>
             <button type="button" id="clear-workspace">Очистить</button>
             <div id ="trash-bin" class="trash-button">🗑️</div>
         </div>
@@ -44,11 +44,12 @@
             </div>
 
             <div class="debug-panel">
-            
+                <div id="console-log" class="debug-content"></div>
             </div>
         </div>
     </div>
 
     <script type='module' src="CreateInstructionBlock.js"></script>
+    <script type="module" src="./run.js"></script>
 </body>
 </html>

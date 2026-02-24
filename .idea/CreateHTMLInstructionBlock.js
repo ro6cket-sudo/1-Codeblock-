@@ -40,6 +40,14 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
                 <input type="text" class="variable-input" ${isGhost ? 'disabled' : ''}>
             </div>
         `;
+    } else if (codeBlock.type === 'output') {
+    block.classList.add('block-output');
+    block.innerHTML = `
+        <span class="label">output</span>
+        <div class="input-container"> 
+            <input type="text" class="output-input" ${isGhost ? 'disabled' : ''}>
+        </div>
+    `;
     } else {
         block.innerHTML = `
             <h4 class="blockName">${codeBlock.type}</h4>

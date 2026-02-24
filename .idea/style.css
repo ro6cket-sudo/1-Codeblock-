@@ -268,7 +268,8 @@ body.dragging {
 }
 
 .block-variable, 
-.block-assignment {
+.block-assignment,
+.block-output {
     border-radius: 15px;
     padding: 10px 15px;
     display: flex;
@@ -288,8 +289,18 @@ body.dragging {
     border: 2px solid #51cf66;
 }
 
+.block-output {
+    background-color: #d1c4e9;
+    border: 2px solid #7e57c2;
+}
+
+.block-output .output-frame {
+    flex-grow: 1;
+}
+
 .block-variable .input-container,
-.block-assignment .input-container {
+.block-assignment .input-container,
+.block-output .input-container {
     background-color: #495057;
     padding: 3px;
     border-radius: 8px;
@@ -298,7 +309,8 @@ body.dragging {
 }
 
 .block-variable input,
-.block-assignment input {
+.block-assignment input,
+.block-output input {
     width: 100%;
     border: none;
     border-radius: 5px;
@@ -306,6 +318,7 @@ body.dragging {
     background-color: white;
     outline: none;
     box-sizing: border-box;
+    flex-grow: 1;
 }
 
 .block-assignment .var-name-frame {
@@ -340,11 +353,6 @@ body.dragging {
 .block[data-type="input"]{
     background-color: #04cafc;
     border: 1px solid #eb04fc;
-}
-
-.block[data-type="output"]{
-    background-color: #fcdb04;
-    border: 1px solid #50345e;
 }
 
 .block:hover {

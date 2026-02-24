@@ -1,7 +1,6 @@
-import Parser from './parser'
-import NumberNode from '.ast'
-import VariableNode from '.ast'
-import BinaryOperationNode from '.ast'
+import {NumberNode,VariableNode,BinaryOperationNode, OutputNode} from './ast.js'
+import { Parser } from './parser.js';
+import {logger} from './ConsoleLogger.js';
 
 export class Interpretator {
     constructor (variables) {
@@ -10,12 +9,12 @@ export class Interpretator {
 
     evaluate (node) {
         if (node.type === 'Number')
-            return node.value;
+            return parseFloat(node.value);
 
         if (node.type === 'Variable')
         {
             if (!(node.name in this.variables))
-                throw new Error(`Переменная${node.name} не обноружена`);
+                throw new Error(`Переменная${node.name} не обнaружена`);
             return this.variables[node.name];
         }
 
@@ -34,6 +33,13 @@ export class Interpretator {
                     if (right === 0) throw new Error("Остаток от деления на 0");
                     return left % right;
             }
+        }
+
+        if (node.type ==="Output") {
+            const valueToPrint = this.evaluate(node.expression)
+            logger.log(valueToPrint);
+
+            return valueToPrint;
         }
     }
 }
