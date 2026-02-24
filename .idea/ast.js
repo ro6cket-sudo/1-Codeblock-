@@ -25,3 +25,10 @@ export class BinaryOperationNode extends Node {
         this.left = left;
     }
 }
+
+export class OutputNode {
+    constructor(expression) {
+        this.type = 'Output';
+        this.expression = expression;
+    }
+}

@@ -1,8 +1,5 @@
-import Token from './tokens';
-import TokenTypes from './tokens';
-import NumberNode from '.ast'
-import VariableNode from '.ast'
-import BinaryOperationNode from '.ast'
+import {Token,TokensTypes} from './tokens.js';
+import {NumberNode,VariableNode,BinaryOperationNode,OutputNode} from './ast.js'
 
 export class Parser {
     tokens = [];
@@ -21,18 +18,32 @@ export class Parser {
             this.currentToken = this.tokens[this.position];
         } else {
             const last = this.tokens.length > 0 ? this.tokens[this.tokens.length - 1].position : 0;
-            this.currentToken = new Token(TokenTypes.ENDOFEXPRESS, null, last);
+            this.currentToken = new Token(TokensTypes.ENDOFEXPRESS, null, last);
         }
     }
 
     parse()
     {
-        return this.parseExpression();
+        return this.parseStatement();
+    }
+
+    parseStatement() {
+    const token = this.currentToken;
+
+    switch (token.type) {
+        case TokensTypes.OUTPUT:
+            return this.parseOutput();
+        // case TokensTypes.VARIABLE:
+        //     return this.parseAssignment();
+
+        default:
+            return this.parseExpression();
+        }
     }
 
     parseExpression() {
         let node = this.parseMultiplication();
-        while (this.currentToken.type === TokenTypes.OPERATION && ['+', '-'].includes(this.currentToken.value)) {
+        while (this.currentToken.type === TokensTypes.OPERATION && ['+', '-'].includes(this.currentToken.value)) {
             let operation = this.currentToken.value;
             this.NextToken();
             node = new BinaryOperationNode(operation, node, this.parseMultiplication());
@@ -42,7 +53,7 @@ export class Parser {
 
     parseMultiplication() {
         let node = this.parseLiteral();
-        while (this.currentToken.type === TokenTypes.OPERATION && ['*', '/', '%'].includes(this.currentToken.value)) {let operation = this.currentToken.value;
+        while (this.currentToken.type === TokensTypes.OPERATION && ['*', '/', '%'].includes(this.currentToken.value)) {let operation = this.currentToken.value;
             let oper = this.currentToken.value;
             this.NextToken();
             node = new BinaryOperationNode(oper, node, this.parseLiteral());
@@ -51,10 +62,10 @@ export class Parser {
     }
 
     parseLiteral() {
-        if(this.currentToken.type === TokenTypes.OPENPARENTHIST){
+        if(this.currentToken.type === TokensTypes.OPENPARENTHIST){
             this.NextToken();
             let node = this.parseExpression();
-            if (this.currentToken.type === TokenTypes.CLOSEPARENTHIST) {
+            if (this.currentToken.type === TokensTypes.CLOSEPARENTHIST) {
                 this.NextToken();
                 return node;
             }
@@ -62,12 +73,12 @@ export class Parser {
                 throw new Error("Ожидалась ')'");
             }
         }
-        if(this.currentToken.type === TokenTypes.NUMBER){
+        if(this.currentToken.type === TokensTypes.NUMBER){
             let token = this.currentToken;
             this.NextToken();
             return new NumberNode(token.value);
         }
-        if(this.currentToken.type === TokenTypes.VARIABLE)
+        if(this.currentToken.type === TokensTypes.VARIABLE)
         {
             let token = this.currentToken;
             this.NextToken();
@@ -76,4 +87,12 @@ export class Parser {
 
         throw new Error(`Неизвестный токен: ${this.currentToken.value}`);
     }
+
+    parseOutput() {
+    this.NextToken();
+    
+    const expression = this.parseExpression();
+    
+    return new OutputNode(expression);
+}
 }

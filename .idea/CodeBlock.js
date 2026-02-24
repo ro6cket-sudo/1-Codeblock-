@@ -12,6 +12,14 @@ export class CodeBlock {
         this.parameters = {};
     }
 
+    getDefualtParameters(type) {
+        const parameters = {
+            'variable' : {color: "blue", text:"Переменная"},
+            'assignment' : {color: "pink", text:"Присвоение"},
+            'output' : {color: "orange", text:"Вывод"}
+        }
+    }
+
     addChild(block) {
         this.childrens.push(block);
         block.parentID = this.id;

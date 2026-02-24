@@ -4,6 +4,11 @@ body{
     display: flex;
     flex-direction: column;
     margin: 0;
+    overflow: hidden;
+}
+
+body.dragging {
+    user-select: none;
 }
 
 .codeblock{
@@ -12,6 +17,74 @@ body{
     flex: 1;
     padding: 10px;
     gap: 10px;
+    min-height: 0;
+}
+
+.container-block {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    gap: 0;
+}
+
+.block-header {
+    background-color: #04cafc;
+    border: 1px solid #eb04fc;
+    padding: 10px;
+    border-radius: 5px 5px 5px 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: fit-content;
+    min-width: 400px;
+    height: auto;
+}
+
+.container-block .block-header{
+    min-width: 400px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    border-radius: 5px 5px 5px 0;
+}
+
+.block-footer {
+    height: 10px;
+    min-width: 400px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #04cafc;
+    border-radius: 0 5px 5px 5px;
+    border: 1px solid #eb04fc;
+}
+
+.container-block .block-footer{
+    width: 100%;
+}
+
+.nested-workspace {
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 40px;
+    padding: 0 0 0 20px;
+    border-left: 6px solid #04cafc;
+    border-bottom: none;
+    border-right: none;
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: auto !important;
+    background: transparent;
+}
+
+.nested-workspace .block, .workspace .block{
+    pointer-events: auto;
 }
 
 .toolbar{
@@ -25,7 +98,7 @@ body{
 
 .toolbar button{
     background-color: #34495e;
-    color: white;
+    color: rgb(255, 255, 255);
     padding: 8px 12px;
     cursor: pointer;
     font-size: 16px;
@@ -43,7 +116,17 @@ body{
     /*height: 75%;*/
     column-gap: 10px;
     background-color: #ffffff;
-    }
+    min-height: 0;
+}
+
+.instruction_set, .workspace, .block, .toolbar {
+    user-select: none;
+
+}
+
+.block > *:not(.nested-workspace), .instruction * {
+    pointer-events: none;
+}
 
 .instruction_set{
     width: 220px;
@@ -61,47 +144,238 @@ body{
     color: #f80505;
 }
 
-.instructions{
+.instructions {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.instruction{
+.instruction {
     background-color: #077373;
-    color: white;
+    color: rgb(223, 216, 216);
     padding: 10px;
-    cursor: pointer;
     border-radius: 10px;
     border: none;
     font-size: 16px;
-    selector: none;
+    user-select: none;
+    cursor: grab;
 }
 
 .instruction:hover{
     background-color: #50345e;
 }
 
+.instruction:active {
+    cursor: grabbing;
+}
+
 .workspace {
-    flex: 1;
-    background-color: #dba8ff;
-    padding: 10px;
-    overflow-y: auto;
-    gap: 10px;
+    background-color: #f4e5ff;
+    overflow: auto;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    padding: 10px;
+    min-height: 0;
     border-radius: 10px;
+    flex: 1;
+}
+
+.workspace::-webkit-scrollbar {
+    width: 8px;
+}
+
+.workspace::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+}
+
+.workspace::-webkit-scrollbar-thumb {
+    background: #3c90ff;
+    border-radius: 10px;
+    border: 2px solid #50345e;
+}
+
+.workspace::-webkit-scrollbar-thumb:hover {
+    background: #50345e;
+}
+
+.workspace .block input, .workspace .block button {
+    pointer-events: auto;
 }
 
 .debug-panel{
     /*position: fixed;*/
-    height: 25%;
+    width: 350px;
+    min-width: 100px;
     /*bottom: 10px;*/
     /*left: 10px;*/
     /*right: 10px;*/
-    min-height: 10%;
     background-color: #8cc5b6;
     border-radius: 10px;
     padding: 10px;
+    border: 2px solid #279c89;
     overflow-y: auto;
+}
 
+.dragging {
+    cursor: grabbing !important;
+}
+
+.ghost * {
+    pointer-events: none;
+}
+
+.placeholder {
+    background-color: #0000001a;
+    border: 2px dashed #999;
+    border-radius: 15px;
+    height: 80px;
+    width: 400px;
+    min-height: 20px;
+    flex-shrink: 0;
+}
+
+.button {
+    background: blue;
+}
+
+.button:hover {
+    background: red;
+}
+
+.block{
+    display: flex;
+    align-items: center;
+    cursor: grab;
+    position: relative;
+    border-radius: 5px;
+    gap: 10px;
+    padding: 10px;
+    width: fit-content;
+    min-width: 400px;
+}
+
+.block.ghost {
+    opacity: 0.6;
+    min-width: 0;
+    pointer-events: none;
+}
+
+.block .instruction {
+    user-select: none;
+}
+
+.block-variable, 
+.block-assignment,
+.block-output {
+    border-radius: 15px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 200px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+.block-assignment {
+    background-color: #ffe082;
+    border: 2px solid #ffb300;
+}
+
+.block-variable {
+    background-color: #b2f2bb;
+    border: 2px solid #51cf66;
+}
+
+.block-output {
+    background-color: #d1c4e9;
+    border: 2px solid #7e57c2;
+}
+
+.block-output .output-frame {
+    flex-grow: 1;
+}
+
+.block-variable .input-container,
+.block-assignment .input-container,
+.block-output .input-container {
+    background-color: #495057;
+    padding: 3px;
+    border-radius: 8px;
+    display: flex;
+    overflow: hidden;
+}
+
+.block-variable input,
+.block-assignment input,
+.block-output input {
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: white;
+    outline: none;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+
+.block-assignment .var-name-frame {
+    width: 60px;
+    flex-shrink: 0;
+}
+
+.block-assignment .var-value-frame {
+    flex-grow: 1;
+}
+
+.block[data-type="if-else"]{
+    background-color: #04cafc;
+    border: 1px solid #eb04fc;
+}
+
+.block[data-type="while"]{
+    background-color: #04cafc;
+    border: 1px solid #eb04fc;
+}
+
+.block[data-type="for"]{
+    background-color: #04cafc;
+    border: 1px solid #eb04fc;
+}
+
+.block[data-type="array"]{
+    background-color: #04cafc;
+    border: 1px solid #eb04fc;
+}
+
+.block[data-type="input"]{
+    background-color: #04cafc;
+    border: 1px solid #eb04fc;
+}
+
+.block:hover {
+    filter: brightness(1.1);
+}
+
+.trash-button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ff4d4d;
+    border: 2px solid #cc0000;
+    border-radius: 4px;
+    cursor: default;
+    font-size: 20px;
+    margin-left: 10px;
+    transition:  0.2s;
+}
+
+.trash-button.hover {
+    background-color: #ff0000 !important;
+    transform: scale(1.2);
 }
