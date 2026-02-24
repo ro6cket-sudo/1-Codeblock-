@@ -55,8 +55,8 @@ function addEvents(block, htmlBlock) {
 
 export function clearAllBlocks() {
     const workspace = document.querySelector(".workspace");
-    if (workspace) {
-        workspace.innerHTML = '';
-    }
+
+    workspace.innerHTML = '';
+    
     blocks.clear();
 }

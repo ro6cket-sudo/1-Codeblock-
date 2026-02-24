@@ -18,7 +18,6 @@ function runProgram() {
             if (block.classList.contains('block-output')) {
                 const inputVal = block.querySelector('.output-input').value;
                 code += `output ${inputVal} `;
-                code = `output ${inputVal}`;
             } 
             else if (block.classList.contains('block-variable')) {
                 const name = block.querySelector('.var-name').value;
