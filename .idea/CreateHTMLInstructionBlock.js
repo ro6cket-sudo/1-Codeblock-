@@ -6,17 +6,21 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
     block.dataset.type = codeBlock.type;
 
 
-    if (codeBlock.type === 'if-else' || codeBlock.type === 'while' || codeBlock.type === 'for') {
+    if (codeBlock.type === 'if' || codeBlock.type === 'while' || codeBlock.type === 'for' || codeBlock.type === 'else') {
         block.classList.add('container-block');
 
         block.innerHTML = `
         <div class="block-header">
             <h4 class="blockName">${codeBlock.type}</h4>
-            ${!isGhost ? '<input class="code-input">' : ''}
+            ${!isGhost && (codeBlock.type !== 'else') ? '<input class="code-input">' : ''}
         </div>
-        <div class="nested-workspace"></div>
-        <div class="block-footer"></div>
+        ${!isGhost ? 
+            '<div class="nested-workspace"></div>' +
+            '<div class="block-footer"></div>' : ''}
         `;
+
+        
+
     } else if (codeBlock.type === 'variable') {
         block.classList.add('block-variable');
         if (isGhost) block.classList.add('ghost');

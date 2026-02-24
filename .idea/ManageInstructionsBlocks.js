@@ -3,6 +3,23 @@ import {createHTMLInstructionBlock} from './CreateHTMLInstructionBlock.js';
 
 export const blocks = new Map();
 
+export function sortBlocks() {
+    const workspace = document.querySelector('.workspace');
+    const allBlocks = workspace.querySelectorAll('[data-id]');
+
+    const sortedBlocks = new Map();
+    allBlocks.forEach(el => {
+        const id = el.dataset.id;
+        if (blocks.has(id)) {
+            sortedBlocks.set(id, blocks.get(id));
+        }
+    });
+
+    blocks.clear();
+    sortedBlocks.forEach((value, key) => blocks.set(key, value));
+}
+
+
 export function addBlock(type) {
     const id = crypto.randomUUID()
     const workspace = document.querySelector(".workspace");
@@ -11,8 +28,12 @@ export function addBlock(type) {
     blocks.set(id, codeBlock);
 
     const htmlBlock = createHTMLInstructionBlock(codeBlock);
-    addEvents(codeBlock, htmlBlock);
+    htmlBlock.dataset.id = id;
+
+    
     workspace.append(htmlBlock);
+
+    sortBlocks();
 }
 
 export function addBlockAtPosition(type, targetPlaceholder) {
@@ -20,12 +41,31 @@ export function addBlockAtPosition(type, targetPlaceholder) {
     const codeBlock = new CodeBlock(id, type);
     blocks.set(id, codeBlock);
 
+    if (['if', 'while', 'for', 'else'].includes(type)) {
+        const endId = crypto.randomUUID();
+        const endBlock = new CodeBlock(endId, 'end');
+        endBlock.parentID = id;
+        blocks.set(endId, endBlock);
+        codeBlock.endId = endId;
+    }
+
     const htmlBlock = createHTMLInstructionBlock(codeBlock);
-    addEvents(codeBlock, htmlBlock);
+    htmlBlock.dataset.id = id;
+
+    if (codeBlock.endId) {
+        const footer = htmlBlock.querySelector('.block-footer');
+        if (footer) {
+            footer.dataset.id = codeBlock.endId;
+        }
+    }
+
+    if (type !== 'else') {
+        addEvents(codeBlock, htmlBlock);
+    }
 
     targetPlaceholder.replaceWith(htmlBlock);
-
     updateNestedContainer(htmlBlock.parentElement);
+    sortBlocks();
 }
 
 export function updateNestedContainer(container) {
@@ -60,3 +100,19 @@ export function clearAllBlocks() {
     }
     blocks.clear();
 }
+
+export function removeBlockWithNestedWorkspace(block) {
+    const nestedBlocks = block.querySelectorAll('[data-id]');
+    nestedBlocks.forEach(el => {
+        if (el.dataset.id) {
+            blocks.delete(el.dataset.id);
+        }
+    });
+
+    const id = block.dataset.id;
+    blocks.delete(id);
+    block.remove();
+}
+
+
+window.g = () => console.table(Array.from(blocks.values()), ['id', 'type'])

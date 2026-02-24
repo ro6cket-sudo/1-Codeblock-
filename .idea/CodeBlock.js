@@ -2,12 +2,14 @@ export class CodeBlock {
     id;
     type;
     parentID;
+    endId;
     childrens;
     parameters;
     constructor(id, type, parentID = null) {
         this.id = id;
         this.type = type;
         this.parentID = parentID;
+        this.endId = null;
         this.childrens = [];
         this.parameters = {};
     }
