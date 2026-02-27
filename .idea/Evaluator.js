@@ -2,7 +2,7 @@ import {NumberNode,VariableNode,BinaryOperationNode, OutputNode} from './ast.js'
 import { Parser } from './parser.js';
 import {logger} from './ConsoleLogger.js';
 
-export class Interpretator {
+export class Evaluator {
     constructor (variables) {
         this.variables = variables;
     }
