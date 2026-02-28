@@ -2,7 +2,6 @@ export const TokensTypes = {
     NUMBER: 'NUMBER',
     OUTPUT: 'OUTPUT',
     VARIABLE: 'VARIABLE',
-    // ASIGN: 'ASIGN',// не нужно
     OPERATION: 'OPERATION',//+ - * / %
     COMPARE: 'COMPARE',// == != > < >= <=
     OPENPARENTHIST: 'OPENPARENTHIST',// (
@@ -14,8 +13,7 @@ export const TokensTypes = {
 export const tokenRules = [
     {type: TokensTypes.NUMBER, regex: /^\d+/},
     {type: TokensTypes.OUTPUT, regex: /^output\b/},
-    {type: TokensTypes.VARIABLE, regex: /^[A-Za-z][A-Za-z0-9]+/},
-    // {type: TokensTypes.ASIGN, regex: /^=/},
+    {type: TokensTypes.VARIABLE, regex: /^[A-Za-z][A-Za-z0-9]*/},
     {type: TokensTypes.OPERATION, regex: /^[+\-*/%]/},
     {type: TokensTypes.COMPARE, regex: /(^>=|<=|==|!=|>|<)/},
     {type: TokensTypes.OPENPARENTHIST, regex: /^\(/},

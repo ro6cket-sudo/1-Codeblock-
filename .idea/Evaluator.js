@@ -34,12 +34,5 @@ export class Evaluator {
                     return left % right;
             }
         }
-
-        if (node.type ==="Output") {
-            const valueToPrint = this.evaluate(node.expression)
-            logger.log(valueToPrint);
-
-            return valueToPrint;
-        }
     }
 }
