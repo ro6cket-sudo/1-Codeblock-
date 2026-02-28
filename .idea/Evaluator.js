@@ -23,6 +23,7 @@ export class Evaluator {
             const right = this.evaluate(node.right);
 
             switch (node.operator){
+                case '>': return left > right;
                 case '+': return left + right;
                 case '-': return left - right;
                 case '*': return left * right;

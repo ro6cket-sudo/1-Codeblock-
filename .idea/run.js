@@ -40,13 +40,16 @@ function runProgram() {
         // }
     // });
 
-    try{
-        interpretator.executeAll(workspace);
-        logger.log("Программа завершена.", "success");
-    }
-    catch(err){
-        logger.error(err);
-    }
+    // try{
+    //     interpretator.executeAll(workspace);
+    //     logger.log("Программа завершена.", "success");
+    // }
+    // catch(err){
+    //     logger.error(err);
+    // }
+
+
+    interpretator.executeAll(workspace);
 
     logger.log("Программа завершена.", "success");
 }

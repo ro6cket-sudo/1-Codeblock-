@@ -37,8 +37,38 @@ export class Parser {
         //     return this.parseAssignment();
 
         default:
-            return this.parseExpression();
+            return this.parseOR();
         }
+    }
+
+    parseOR() {
+        let node = this.parseAND();
+        while (this.currentToken.type === TokensTypes.OR) {
+            const operation = this.currentToken.value;
+            this.NextToken();
+            node = new BinaryOperationNode(operation, node, this.parseAND());
+        }
+        return node;
+    }
+
+    parseAND() {
+        let node = this.parseCompare();
+        while (this.currentToken.type === TokensTypes.AND) {
+            const operation = this.currentToken.value;
+            this.NextToken();
+            node = new BinaryOperationNode(operation, node, this.parseCompare());
+        }
+        return node;
+    }
+
+    parseCompare(){
+        let node = this.parseExpression();
+        while (this.currentToken.type === TokensTypes.COMPARE) {
+            const operation = this.currentToken.value;
+            this.NextToken();
+            node = new BinaryOperationNode(operation, node, this.parseExpression());
+        }
+        return node;
     }
 
     parseExpression() {

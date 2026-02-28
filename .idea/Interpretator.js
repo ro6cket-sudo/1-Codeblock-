@@ -24,6 +24,11 @@ export class Interpretator {
 
         for (let i = 0; i < blocks.length; i++) {
             const block = blocks[i];
+
+            if (block.dataset.type === 'else'){
+                continue;
+            }
+
             this.excuteBlock(block)
         }
     }
@@ -106,11 +111,28 @@ export class Interpretator {
     }
 
     excuteIf(block) {
-        const input = block.querySelectorAll('.code-input');
+        const input = block.querySelector('.code-input');
         const string = input.value.trim();
         if (!string){
             throw new Error('Блок if не содержит условие');
         }
         const value = this.evaluateExpression(string);
+
+        const nasted = block.querySelector('.nested-workspace');
+
+        if (value === true){
+            if (nasted){
+                this.executeAll(nasted);
+            }
+        }
+        else {
+            const next = block.nextElementSibling;
+            if (next && next.dataset.type === "else") {
+                const elseNested = next.querySelector('.nested-workspace');
+                if (elseNested){
+                    this.executeAll(elseNested);
+                }
+            }
+        }
     }
 }
