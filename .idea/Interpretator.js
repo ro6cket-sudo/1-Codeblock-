@@ -210,6 +210,9 @@ export class Interpretator {
             throw new Error('Все поля в блоке for должны быть заполнены');
         }
 
+        const loopVarName = this.getForVariableName(init, step);
+        const hadBefore = Object.prototype.hasOwnProperty.call(this.variables, loopVarName);
+
         this.executeAssignmentFromString(init);
 
         const nested = block.querySelector('.nested-workspace');
@@ -220,5 +223,29 @@ export class Interpretator {
             }
             this.executeStepExpression(step);
         }
+
+        if (!hadBefore) {
+            delete this.variables[loopVarName];
+        }
+    }
+
+    getForVariableName(init, step) {
+        const initTrimmed = init.trim();
+
+        if (initTrimmed.includes('=')) {
+            return initTrimmed.split('=')[0].trim();
+        }
+
+        const incMatch = initTrimmed.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*(\+\+|--)/);
+        if (incMatch) {
+            return incMatch[1];
+        }
+
+        const stepMatch = step.trim().match(/^([a-zA-Z_][a-zA-Z0-9_]*)/);
+        if (stepMatch) {
+            return stepMatch[1];
+        }
+
+        throw new Error('Не удалось определить переменную цикла for');
     }
 }
