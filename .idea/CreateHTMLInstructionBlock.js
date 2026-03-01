@@ -31,7 +31,7 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
                 <input type="text" class="variable-input" ${isGhost ? 'disabled' : ''}>
             </div>
         `;
-    } else if (codeBlock.type === 'string'){
+    } else if (codeBlock.type === 'string_variable'){
         block.classList.add('block-string');
         if (isGhost) block.classList.add('ghost');
 

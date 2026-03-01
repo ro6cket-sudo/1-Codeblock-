@@ -34,7 +34,7 @@ export class OutputNode extends Node {
     }
 }
 
-export class stringNode extends Node {
+export class StringNode extends Node {
     constructor(string) {
         super();
         this.type = 'String';

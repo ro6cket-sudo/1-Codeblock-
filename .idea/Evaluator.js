@@ -11,6 +11,10 @@ export class Evaluator {
         if (node.type === 'Number')
             return parseFloat(node.value);
 
+        if (node.type === 'String'){
+            return node.value;
+        }
+
         if (node.type === 'Variable')
         {
             if (!(node.name in this.variables))
@@ -24,6 +28,11 @@ export class Evaluator {
 
             switch (node.operator){
                 case '>': return left > right;
+                case '<': return left < right;
+                case '<=': return left <= right;
+                case '>=': return left >= right;
+                case '==': return left === right;
+                case '!=': return left !== right;
                 case '+': return left + right;
                 case '-': return left - right;
                 case '*': return left * right;

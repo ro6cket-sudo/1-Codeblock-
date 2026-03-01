@@ -103,6 +103,13 @@ export class Parser {
                 throw new Error("Ожидалась ')'");
             }
         }
+
+        if (this.currentToken.type === TokensTypes.STRING) {
+            let token = this.currentToken;
+            this.NextToken();
+            return new StringNode(token.value.slice(1, -1));
+        }
+
         if(this.currentToken.type === TokensTypes.NUMBER){
             let token = this.currentToken;
             this.NextToken();
