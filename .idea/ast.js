@@ -26,9 +26,18 @@ export class BinaryOperationNode extends Node {
     }
 }
 
-export class OutputNode {
+export class OutputNode extends Node {
     constructor(expression) {
+        super();
         this.type = 'Output';
         this.expression = expression;
+    }
+}
+
+export class stringNode extends Node {
+    constructor(string) {
+        super();
+        this.type = 'String';
+        this.string = string;
     }
 }

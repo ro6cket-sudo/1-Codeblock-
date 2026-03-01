@@ -1,5 +1,6 @@
 export const TokensTypes = {
     NUMBER: 'NUMBER',
+    STRING: 'STRING',
     OUTPUT: 'OUTPUT',
     VARIABLE: 'VARIABLE',
     OPERATION: 'OPERATION',//+ - * / %
@@ -15,12 +16,13 @@ export const TokensTypes = {
 
 export const tokenRules = [
     {type: TokensTypes.NUMBER, regex: /^\d+/},
+    {type: TokensTypes.STRING, regex: /^".*?"/},
     {type: TokensTypes.OUTPUT, regex: /^output\b/},
     {type: TokensTypes.VARIABLE, regex: /^[A-Za-z][A-Za-z0-9]*/},
     {type: TokensTypes.OPERATION, regex: /^[+\-*/%]/},
     {type: TokensTypes.COMPARE, regex: /(^>=|<=|==|!=|>|<)/},
-    {type: TokensTypes.OR, regex: /^or/},
-    {type: TokensTypes.AND, regex: /^and/},
+    {type: TokensTypes.OR, regex: /^or\b/},
+    {type: TokensTypes.AND, regex: /^and\b/},
     {type: TokensTypes.NOT, regex: /^!/},
     {type: TokensTypes.OPENPARENTHIST, regex: /^\(/},
     {type: TokensTypes.CLOSEPARENTHIST, regex: /^\)/},
