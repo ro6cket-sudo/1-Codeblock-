@@ -19,7 +19,7 @@ export const tokenRules = [
     {type: TokensTypes.VARIABLE, regex: /^[A-Za-z][A-Za-z0-9]*/},
     {type: TokensTypes.OPERATION, regex: /^[+\-*/%]/},
     {type: TokensTypes.COMPARE, regex: /(^>=|<=|==|!=|>|<)/},
-    {type: TokensTypes.OR, regex: /^or]/},
+    {type: TokensTypes.OR, regex: /^or/},
     {type: TokensTypes.AND, regex: /^and/},
     {type: TokensTypes.NOT, regex: /^!/},
     {type: TokensTypes.OPENPARENTHIST, regex: /^\(/},

@@ -17,7 +17,7 @@ export class VariableNode extends Node {
 }
 
 export class BinaryOperationNode extends Node {
-    constructor(operator, right, left) {
+    constructor(operator, left, right) {
         super();
         this.type = 'BinaryOperation';
         this.operator = operator;

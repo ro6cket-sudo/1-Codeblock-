@@ -82,11 +82,12 @@ export class Interpretator {
         const names = string.split(',').map(s => s.trim()).filter(s => s.length > 0);
 
         for (const name of names){
-            if (this.variables[name]) {
+            if (name in this.variables) {
                 throw new Error(`Переменная ${name} уже существует`);
             }
 
-            this.variables[name] = null;
+            this.variables[name] = 0;
+            // по тз "считаем, что все вновь объявленные переменные по умолчанию равны 0."
         }
     }
 
@@ -120,7 +121,7 @@ export class Interpretator {
 
         const nasted = block.querySelector('.nested-workspace');
 
-        if (value === true){
+        if (value){
             if (nasted){
                 this.executeAll(nasted);
             }
