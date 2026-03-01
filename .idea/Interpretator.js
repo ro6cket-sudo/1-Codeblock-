@@ -62,12 +62,16 @@ export class Interpretator {
             }
 
             case 'array': {
-                this.excuteVariable(block);
+                this.executeArray(block);
                 break;
             }
 
             case 'for': {
                 this.executeFor(block);
+                break;
+            }
+            
+            case 'nothing': {
                 break;
             }
 
@@ -106,7 +110,22 @@ export class Interpretator {
         }
 
         const value = this.evaluateExpression(right);
-        this.variables[left] = value;
+
+        const arrayMatch = left.match(/^([a-zA-Z_][a-zA-Z0-9]*)\[(.+)\]$/);
+
+        if (arrayMatch) {
+            const arrayName = arrayMatch[1];
+            const indexExpression = arrayMatch[2];
+
+            if (!(arrayName in this.variables)) throw new Error(`Массив ${arrayName} не обнаружен`);
+            if (!Array.isArray(this.variables[arrayName])) throw new Error(`${arrayName} не является массивом`);
+            const index = this.evaluateExpression(indexExpression);
+            if (index < 0 || index >= this.variables[arrayName].length) throw new Error(`Индекс ${index} выходит за границы массива ${arrayName}`);
+            this.variables[arrayName][index] = value;
+        } else {
+            if (!(left in this.variables)) throw new Error(`Переменная ${left} не обнаружена`);
+            this.variables[left] = value;
+        }
     }
 
     executeOutput(block) {
@@ -247,5 +266,18 @@ export class Interpretator {
         }
 
         throw new Error('Не удалось определить переменную цикла for');
+    }
+
+    executeArray(block) {
+        const nameInput = block.querySelector('.array-name-input');
+        const sizeInput = block.querySelector('.array-size-input');
+        const name = nameInput.value.trim();
+        const sizeExpression = sizeInput.value.trim();
+
+        if (!name || !sizeExpression) throw new Error('Поля имени и размера массива не должны быть пустыми');
+        if (name in this.variables) throw new Error(`Переменная ${name} уже существует`);
+
+        const size = this.evaluateExpression(sizeExpression);
+        this.variables[name] = new Array(size).fill(0);
     }
 }

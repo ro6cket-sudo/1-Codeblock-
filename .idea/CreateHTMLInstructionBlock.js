@@ -67,6 +67,20 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             <input type="text" class="output-input" ${isGhost ? 'disabled' : ''}>
         </div>
     `;
+    } else if (codeBlock.type === 'array') {
+        block.classList.add('block-array');
+        block.innerHTML = `
+            <span class="label">array</span>
+            <div class="input-container">
+                <input type="text" class="array-name-input" placeholder="имя" ${isGhost ? 'disabled' : ''}>
+            </div>
+            <div class="input-container">
+                <input type="text" class="array-size-input" placeholder="размер" ${isGhost ? 'disabled' : ''}>
+            </div>
+        `;
+    } else if (codeBlock.type === 'nothing') {
+        block.classList.add('block-nothing');
+        block.innerHTML = ``;
     } else {
         block.innerHTML = `
             <h4 class="blockName">${codeBlock.type}</h4>

@@ -85,6 +85,8 @@ export function updateNestedContainer(container) {
 
 function addEvents(block, htmlBlock) {
     const input = htmlBlock.querySelector('input');
+    if (!input) return;
+
     const workspace = document.querySelector('.workspace');
 
     input.addEventListener('input', function(e) {

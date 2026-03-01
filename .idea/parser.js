@@ -1,5 +1,5 @@
 import {Token,TokensTypes} from './tokens.js';
-import {NumberNode,VariableNode,BinaryOperationNode,OutputNode} from './ast.js'
+import {NumberNode,VariableNode,BinaryOperationNode,OutputNode,ArrayAccessNode} from './ast.js'
 
 export class Parser {
     tokens = [];
@@ -112,6 +112,17 @@ export class Parser {
         {
             let token = this.currentToken;
             this.NextToken();
+
+            if (this.currentToken.type === TokensTypes.OPENBRACKET) {
+                this.NextToken();
+                const indexExpression = this.parseExpression();
+                if (this.currentToken.type !== TokensTypes.CLOSEBRACKET) {
+                    throw new Error("Ожидалась ']'");
+                }
+                this.NextToken();
+                return new ArrayAccessNode(token.value, indexExpression);
+            }
+
             return new VariableNode(token.value);
         }
 

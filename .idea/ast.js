@@ -32,3 +32,12 @@ export class OutputNode {
         this.expression = expression;
     }
 }
+
+export class ArrayAccessNode extends Node {
+    constructor(name, indexExpression) {
+        super();
+        this.type = 'ArrayAccess';
+        this.name = name;
+        this.index = indexExpression;
+    }
+}
