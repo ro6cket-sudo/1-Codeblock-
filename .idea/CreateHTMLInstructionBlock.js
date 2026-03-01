@@ -6,7 +6,7 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
     block.dataset.type = codeBlock.type;
 
 
-    if (codeBlock.type === 'if' || codeBlock.type === 'while' || codeBlock.type === 'for' || codeBlock.type === 'else') {
+    if (codeBlock.type === 'if' || codeBlock.type === 'while' || codeBlock.type === 'else') {
         block.classList.add('container-block');
 
         block.innerHTML = `
@@ -21,7 +21,22 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
 
         
 
-    } else if (codeBlock.type === 'variable') {
+    } else if (codeBlock.type === 'for') {
+    block.classList.add('container-block');
+    block.innerHTML = `
+        <div class="block-header">
+            <h4 class="blockName">for</h4>
+            <div class="for-inputs-container">
+                <input class="for-input for-init" placeholder="переменная">
+                <input class="for-input for-cond" placeholder="условие">
+                <input class="for-input for-step" placeholder="шаг"> 
+            </div>
+        </div>
+        ${!isGhost ? 
+            '<div class="nested-workspace"></div>' +
+            '<div class="block-footer"></div>' : ''} `;
+    } 
+    else if (codeBlock.type === 'variable') {
         block.classList.add('block-variable');
         if (isGhost) block.classList.add('ghost');
         

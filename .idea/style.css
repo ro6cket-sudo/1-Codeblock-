@@ -359,9 +359,34 @@ body.dragging {
     border: 1px solid #eb04fc;
 }
 
-.block[data-type="for"]{
-    background-color: #04cafc;
-    border: 1px solid #eb04fc;
+.for-input {
+    width: 90px; 
+    height: 26px;
+    border: 1px solid #1520b8; 
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 14px;
+    background-color: white;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.for-input:hover {
+    border-color: #eb04fc;
+}
+
+.for-input:focus {
+    border-color: #eb04fc;
+    box-shadow: 0 0 4px rgba(235, 4, 252, 0.4);
+    width: 110px; 
+}
+
+.for-inputs-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
 }
 
 .block[data-type="array"]{

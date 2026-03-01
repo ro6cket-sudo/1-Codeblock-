@@ -14,7 +14,7 @@ export class Interpretator {
         const lexer = new Lexer(expression);
         const tokens = lexer.Analys();
         const parser = new Parser(tokens);
-        const ast = parser.parseExpression(expression);
+        const ast = parser.parseOR();
         const evaluator = new Evaluator(this.variables);
         return evaluator.evaluate(ast);
     }
@@ -63,6 +63,11 @@ export class Interpretator {
 
             case 'array': {
                 this.excuteVariable(block);
+                break;
+            }
+
+            case 'for': {
+                this.executeFor(block);
                 break;
             }
 
@@ -134,6 +139,86 @@ export class Interpretator {
                     this.executeAll(elseNested);
                 }
             }
+        }
+    }
+
+    executeAssignmentFromString(str) {
+        const trimmed = str.trim();
+        if (!trimmed) {
+            throw new Error('Пустое присваивание в блоке for');
+        }
+
+        if (trimmed.endsWith('++') || trimmed.endsWith('--')) {
+            const name = trimmed.slice(0, -2).trim();
+            if (!name) {
+                throw new Error('Некорректная форма шага цикла for');
+            }
+            if (!(name in this.variables)) {
+                throw new Error(`Переменная ${name} не объявлена`);
+            }
+            this.variables[name] += trimmed.endsWith('++') ? 1 : -1;
+            return;
+        }
+
+        const parts = trimmed.split('=');
+        if (parts.length !== 2) {
+            throw new Error('Ожидалось присваивание вида "i = выражение"');
+        }
+
+        const left = parts[0].trim();
+        const right = parts[1].trim();
+
+        if (!left || !right) {
+            throw new Error('Левая и правая части присваивания не должны быть пустыми');
+        }
+
+        const value = this.evaluateExpression(right);
+        this.variables[left] = value;
+    }
+
+    executeStepExpression(str) {
+        const trimmed = str.trim();
+        if (!trimmed) {
+            throw new Error('Пустой шаг в блоке for');
+        }
+
+        const match = trimmed.match(/^([a-zA-Z_][a-zA-Z0-9_]*)/);
+        if (!match) {
+            throw new Error('В шаге цикла for должна быть переменная, например "i + 1"');
+        }
+
+        const name = match[1];
+
+        if (!(name in this.variables)) {
+            throw new Error(`Переменная ${name} не объявлена`);
+        }
+
+        const value = this.evaluateExpression(trimmed);
+        this.variables[name] = value;
+    }
+
+    executeFor(block) {
+        const initInput = block.querySelector('.for-init');
+        const condInput = block.querySelector('.for-cond');
+        const stepInput = block.querySelector('.for-step');
+
+        const init = initInput?.value.trim();
+        const cond = condInput?.value.trim();
+        const step = stepInput?.value.trim();
+
+        if (!init || !cond || !step) {
+            throw new Error('Все поля в блоке for должны быть заполнены');
+        }
+
+        this.executeAssignmentFromString(init);
+
+        const nested = block.querySelector('.nested-workspace');
+
+        while (this.evaluateExpression(cond)) {
+            if (nested) {
+                this.executeAll(nested);
+            }
+            this.executeStepExpression(step);
         }
     }
 }
