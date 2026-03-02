@@ -79,15 +79,16 @@ export function presetBubbleSort() {
     clearAllBlocks();
 
     makeArray('arr', '5');
-    makeVariable('i, j, temp');
-
-    makeNothing(1);
-
+    
     makeAssignment('arr[0]', '5');
     makeAssignment('arr[1]', '3');
     makeAssignment('arr[2]', '8');
     makeAssignment('arr[3]', '1');
     makeAssignment('arr[4]', '4');
+
+    makeNothing(1);
+
+    makeVariable('temp');
 
     makeNothing(2);
 
