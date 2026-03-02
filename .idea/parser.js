@@ -1,5 +1,5 @@
 import {Token,TokensTypes} from './tokens.js';
-import {NumberNode,VariableNode,BinaryOperationNode,OutputNode,ArrayAccessNode} from './ast.js'
+import {NumberNode,VariableNode,BinaryOperationNode,OutputNode,ArrayAccessNode, StringNode, BooleanNode, CharNode} from './ast.js'
 
 export class Parser {
     tokens = [];
@@ -119,7 +119,7 @@ export class Parser {
         if (this.currentToken.type === TokensTypes.BOOLEAN) {
             let token = this.currentToken;
             this.NextToken();
-            return new CharNode(token.value === 'true');
+            return new BooleanNode(token.value === 'true');
         }
 
         if(this.currentToken.type === TokensTypes.NUMBER){

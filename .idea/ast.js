@@ -38,7 +38,7 @@ export class StringNode extends Node {
     constructor(value) {
         super();
         this.type = 'String';
-        this.string = value;
+        this.value = value;
     }
 }
 
