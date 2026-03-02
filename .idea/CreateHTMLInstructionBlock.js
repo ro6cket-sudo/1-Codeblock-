@@ -56,6 +56,16 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
                 <input type="text" class="variable-input" ${isGhost ? 'disabled' : ''}>
             </div>
         `;
+    } else if (codeBlock.type === 'boolean_variable'){
+        block.classList.add('block-boolean');
+        if (isGhost) block.classList.add('ghost');
+
+        block.innerHTML = `
+            <span class="variable-label">variable</span>
+            <div class="input-container">
+                <input type="text" class="variable-input" ${isGhost ? 'disabled' : ''}>
+            </div>
+        `;
     } else if (codeBlock.type === 'assignment'){
         block.classList.add('block-assignment');
         if (isGhost) block.classList.add('ghost');

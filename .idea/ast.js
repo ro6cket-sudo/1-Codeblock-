@@ -35,10 +35,26 @@ export class OutputNode extends Node {
 }
 
 export class StringNode extends Node {
-    constructor(string) {
+    constructor(value) {
         super();
         this.type = 'String';
-        this.string = string;
+        this.string = value;
+    }
+}
+
+export class CharNode extends Node {
+    constructor(value) {
+        super();
+        this.type = 'Char';
+        this.value = value;
+    }
+}
+
+export class BooleanNode extends Node {
+    constructor(value) {
+        super();
+        this.type = 'Boolean';
+        this.value = value;
     }
 }
 

@@ -41,6 +41,16 @@ export class Interpretator {
                 break;
             }
 
+            case 'string_variable': {
+                this.excuteStringVariable(block);
+                break;
+            }
+
+            case 'boolean_variable': {
+                this.executeBooleanVariable(block);
+                break;
+            }
+
             case 'assignment': {
                 this.executeAssignment(block);
                 break;
@@ -96,7 +106,42 @@ export class Interpretator {
             }
 
             this.variables[name] = 0;
-            // по тз "считаем, что все вновь объявленные переменные по умолчанию равны 0."
+        }
+    }
+
+    executeStringVariable(block) {
+        const input = block.querySelector('.variable-input');
+        const string = input.value.trim();
+        if (!string){
+            throw new Error('Nothing to excute variable found');
+        }
+
+        const names = string.split(',').map(s => s.trim()).filter(s => s.length > 0);
+
+        for (const name of names){
+            if (name in this.variables) {
+                throw new Error(`Переменная ${name} уже существует`);
+            }
+
+            this.variables[name] = "";
+        }
+    }
+
+    executeBooleanVariable(block) {
+        const input = block.querySelector('.variable-input');
+        const string = input.value.trim();
+        if (!string){
+            throw new Error('Nothing to excute variable found');
+        }
+
+        const names = string.split(',').map(s => s.trim()).filter(s => s.length > 0);
+
+        for (const name of names){
+            if (name in this.variables) {
+                throw new Error(`Переменная ${name} уже существует`);
+            }
+
+            this.variables[name] = false;
         }
     }
 

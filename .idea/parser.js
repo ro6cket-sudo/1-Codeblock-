@@ -110,6 +110,18 @@ export class Parser {
             return new StringNode(token.value.slice(1, -1));
         }
 
+        if (this.currentToken.type === TokensTypes.CHAR) {
+            let token = this.currentToken;
+            this.NextToken();
+            return new CharNode(token.value.slice(1, -1));
+        }
+
+        if (this.currentToken.type === TokensTypes.BOOLEAN) {
+            let token = this.currentToken;
+            this.NextToken();
+            return new CharNode(token.value);
+        }
+
         if(this.currentToken.type === TokensTypes.NUMBER){
             let token = this.currentToken;
             this.NextToken();
