@@ -9,10 +9,10 @@ export class Evaluator {
 
     getType(value){
         if (typeof(value) === 'number') {
-            return 'Number';
+            return 'number';
         }
         if (typeof(value) === 'string') {
-            return 'String';
+            return 'string';
         }
         if (typeof(value) === 'boolean') {
             return 'boolean';

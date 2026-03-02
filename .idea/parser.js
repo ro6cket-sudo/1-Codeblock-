@@ -119,7 +119,7 @@ export class Parser {
         if (this.currentToken.type === TokensTypes.BOOLEAN) {
             let token = this.currentToken;
             this.NextToken();
-            return new CharNode(token.value);
+            return new CharNode(token.value === 'true');
         }
 
         if(this.currentToken.type === TokensTypes.NUMBER){
