@@ -28,9 +28,9 @@ export class Evaluator {
 
             switch (node.operator){
                 case '>': return left > right;
-                case '<': return left < right;
-                case '<=': return left <= right;
+                case '<':  return left < right;
                 case '>=': return left >= right;
+                case '<=': return left <= right;
                 case '==': return left === right;
                 case '!=': return left !== right;
                 case '+': return left + right;
@@ -43,6 +43,20 @@ export class Evaluator {
                     if (right === 0) throw new Error("Остаток от деления на 0");
                     return left % right;
             }
+        }
+
+        if (node.type === 'ArrayAccess') {
+            if (!(node.name in this.variables))
+                throw new Error(`Массив ${node.name} не обнаружен`);
+
+            const arr = this.variables[node.name];
+            if (!Array.isArray(arr))
+                throw new Error(`${node.name} не является массивом`);
+
+            const index = this.evaluate(node.index);
+            if (index < 0 || index >= arr.length)
+                throw new Error(`Индекс ${index} вне диапазона массива ${node.name}`);
+            return arr[index];
         }
     }
 }

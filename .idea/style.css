@@ -251,6 +251,24 @@ body.dragging {
     flex-shrink: 0;
 }
 
+.block-nothing {
+    width: 100%;
+    min-width: 400px;
+    min-height: 20px;
+    background-color: transparent;
+    border: 2px dashed transparent;
+    border-radius: 4px;
+    padding: 0 !important;
+    margin: 0;
+    cursor: grab;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.block-nothing:hover {
+    background-color: #04cafc33;
+    border-color: #04cafc14;
+}
+
 .button {
     background: blue;
 }
@@ -367,9 +385,34 @@ body.dragging {
     border: 1px solid #eb04fc;
 }
 
-.block[data-type="for"]{
-    background-color: #04cafc;
-    border: 1px solid #eb04fc;
+.for-input {
+    width: 90px; 
+    height: 26px;
+    border: 1px solid #1520b8; 
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 14px;
+    background-color: white;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.for-input:hover {
+    border-color: #eb04fc;
+}
+
+.for-input:focus {
+    border-color: #eb04fc;
+    box-shadow: 0 0 4px rgba(235, 4, 252, 0.4);
+    width: 110px; 
+}
+
+.for-inputs-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
 }
 
 .block[data-type="array"]{
@@ -382,7 +425,7 @@ body.dragging {
     border: 1px solid #eb04fc;
 }
 
-.block:hover {
+.block:not(.block-nothing):hover {
     filter: brightness(1.1);
 }
 

@@ -11,7 +11,9 @@ export const TokensTypes = {
     OPENPARENTHIST: 'OPENPARENTHIST',// (
     CLOSEPARENTHIST: 'CLOSEPARENTHIST',// )
     COMMA: 'COMMA',// ,
-    ENDOFEXPRESS: 'ENDOFEXPRESS'
+    ENDOFEXPRESS: 'ENDOFEXPRESS',
+    OPENBRACKET: 'OPENBRACKET',
+    CLOSEBRACKET: 'CLOSEBRACKET'
 }
 
 export const tokenRules = [
@@ -26,7 +28,9 @@ export const tokenRules = [
     {type: TokensTypes.NOT, regex: /^!/},
     {type: TokensTypes.OPENPARENTHIST, regex: /^\(/},
     {type: TokensTypes.CLOSEPARENTHIST, regex: /^\)/},
-    {type: TokensTypes.COMMA, regex: /^,/}
+    {type: TokensTypes.COMMA, regex: /^,/},
+    {type: TokensTypes.OPENBRACKET, regex: /^\[/},
+    {type: TokensTypes.CLOSEBRACKET, regex: /^\]/}
 ]
 
 export class Token {

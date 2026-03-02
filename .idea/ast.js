@@ -41,3 +41,12 @@ export class StringNode extends Node {
         this.string = string;
     }
 }
+
+export class ArrayAccessNode extends Node {
+    constructor(name, indexExpression) {
+        super();
+        this.type = 'ArrayAccess';
+        this.name = name;
+        this.index = indexExpression;
+    }
+}

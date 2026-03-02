@@ -14,7 +14,7 @@ export class Interpretator {
         const lexer = new Lexer(expression);
         const tokens = lexer.Analys();
         const parser = new Parser(tokens);
-        const ast = parser.parseExpression(expression);
+        const ast = parser.parseOR();
         const evaluator = new Evaluator(this.variables);
         return evaluator.evaluate(ast);
     }
@@ -62,7 +62,16 @@ export class Interpretator {
             }
 
             case 'array': {
-                this.excuteVariable(block);
+                this.executeArray(block);
+                break;
+            }
+
+            case 'for': {
+                this.executeFor(block);
+                break;
+            }
+            
+            case 'nothing': {
                 break;
             }
 
@@ -101,7 +110,22 @@ export class Interpretator {
         }
 
         const value = this.evaluateExpression(right);
-        this.variables[left] = value;
+
+        const arrayMatch = left.match(/^([a-zA-Z_][a-zA-Z0-9]*)\[(.+)\]$/);
+
+        if (arrayMatch) {
+            const arrayName = arrayMatch[1];
+            const indexExpression = arrayMatch[2];
+
+            if (!(arrayName in this.variables)) throw new Error(`Массив ${arrayName} не обнаружен`);
+            if (!Array.isArray(this.variables[arrayName])) throw new Error(`${arrayName} не является массивом`);
+            const index = this.evaluateExpression(indexExpression);
+            if (index < 0 || index >= this.variables[arrayName].length) throw new Error(`Индекс ${index} выходит за границы массива ${arrayName}`);
+            this.variables[arrayName][index] = value;
+        } else {
+            if (!(left in this.variables)) throw new Error(`Переменная ${left} не обнаружена`);
+            this.variables[left] = value;
+        }
     }
 
     executeOutput(block) {
@@ -135,5 +159,125 @@ export class Interpretator {
                 }
             }
         }
+    }
+
+    executeAssignmentFromString(str) {
+        const trimmed = str.trim();
+        if (!trimmed) {
+            throw new Error('Пустое присваивание в блоке for');
+        }
+
+        if (trimmed.endsWith('++') || trimmed.endsWith('--')) {
+            const name = trimmed.slice(0, -2).trim();
+            if (!name) {
+                throw new Error('Некорректная форма шага цикла for');
+            }
+            if (!(name in this.variables)) {
+                throw new Error(`Переменная ${name} не объявлена`);
+            }
+            this.variables[name] += trimmed.endsWith('++') ? 1 : -1;
+            return;
+        }
+
+        const parts = trimmed.split('=');
+        if (parts.length !== 2) {
+            throw new Error('Ожидалось присваивание вида "i = выражение"');
+        }
+
+        const left = parts[0].trim();
+        const right = parts[1].trim();
+
+        if (!left || !right) {
+            throw new Error('Левая и правая части присваивания не должны быть пустыми');
+        }
+
+        const value = this.evaluateExpression(right);
+        this.variables[left] = value;
+    }
+
+    executeStepExpression(str) {
+        const trimmed = str.trim();
+        if (!trimmed) {
+            throw new Error('Пустой шаг в блоке for');
+        }
+
+        const match = trimmed.match(/^([a-zA-Z_][a-zA-Z0-9_]*)/);
+        if (!match) {
+            throw new Error('В шаге цикла for должна быть переменная, например "i + 1"');
+        }
+
+        const name = match[1];
+
+        if (!(name in this.variables)) {
+            throw new Error(`Переменная ${name} не объявлена`);
+        }
+
+        const value = this.evaluateExpression(trimmed);
+        this.variables[name] = value;
+    }
+
+    executeFor(block) {
+        const initInput = block.querySelector('.for-init');
+        const condInput = block.querySelector('.for-cond');
+        const stepInput = block.querySelector('.for-step');
+
+        const init = initInput?.value.trim();
+        const cond = condInput?.value.trim();
+        const step = stepInput?.value.trim();
+
+        if (!init || !cond || !step) {
+            throw new Error('Все поля в блоке for должны быть заполнены');
+        }
+
+        const loopVarName = this.getForVariableName(init, step);
+        const hadBefore = Object.prototype.hasOwnProperty.call(this.variables, loopVarName);
+
+        this.executeAssignmentFromString(init);
+
+        const nested = block.querySelector('.nested-workspace');
+
+        while (this.evaluateExpression(cond)) {
+            if (nested) {
+                this.executeAll(nested);
+            }
+            this.executeStepExpression(step);
+        }
+
+        if (!hadBefore) {
+            delete this.variables[loopVarName];
+        }
+    }
+
+    getForVariableName(init, step) {
+        const initTrimmed = init.trim();
+
+        if (initTrimmed.includes('=')) {
+            return initTrimmed.split('=')[0].trim();
+        }
+
+        const incMatch = initTrimmed.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*(\+\+|--)/);
+        if (incMatch) {
+            return incMatch[1];
+        }
+
+        const stepMatch = step.trim().match(/^([a-zA-Z_][a-zA-Z0-9_]*)/);
+        if (stepMatch) {
+            return stepMatch[1];
+        }
+
+        throw new Error('Не удалось определить переменную цикла for');
+    }
+
+    executeArray(block) {
+        const nameInput = block.querySelector('.array-name-input');
+        const sizeInput = block.querySelector('.array-size-input');
+        const name = nameInput.value.trim();
+        const sizeExpression = sizeInput.value.trim();
+
+        if (!name || !sizeExpression) throw new Error('Поля имени и размера массива не должны быть пустыми');
+        if (name in this.variables) throw new Error(`Переменная ${name} уже существует`);
+
+        const size = this.evaluateExpression(sizeExpression);
+        this.variables[name] = new Array(size).fill(0);
     }
 }
