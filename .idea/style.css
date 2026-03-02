@@ -299,7 +299,8 @@ body.dragging {
     user-select: none;
 }
 
-.block-variable, 
+.block-variable,
+.block-string,
 .block-assignment,
 .block-output {
     border-radius: 15px;
@@ -321,6 +322,16 @@ body.dragging {
     border: 2px solid #51cf66;
 }
 
+.block-string{
+    background-color: #d550fd;
+    border: 2px solid #9939b7;
+}
+
+.block-boolean{
+    background-color: #ff00dd;
+    border: 2px solid #bd03a4;
+}
+
 .block-output {
     background-color: #d1c4e9;
     border: 2px solid #7e57c2;
@@ -331,6 +342,8 @@ body.dragging {
 }
 
 .block-variable .input-container,
+.block-string .input-container,
+.block-boolean .input-container,
 .block-assignment .input-container,
 .block-output .input-container {
     background-color: #495057;
@@ -341,6 +354,8 @@ body.dragging {
 }
 
 .block-variable input,
+.block-string input,
+.block-boolean input,
 .block-assignment input,
 .block-output input {
     width: 100%;
