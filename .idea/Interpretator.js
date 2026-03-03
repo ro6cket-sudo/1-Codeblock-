@@ -35,59 +35,65 @@ export class Interpretator {
 
     excuteBlock(block) {
         const blockType = block.dataset.type;
-        switch (blockType) {
-            case 'variable': {
-                this.excuteVariable(block);
-                break;
-            }
 
-            case 'string_variable': {
-                this.excuteStringVariable(block);
-                break;
-            }
+        try {
+            switch (blockType) {
+                case 'variable': {
+                    this.excuteVariable(block);
+                    break;
+                }
 
-            case 'boolean_variable': {
-                this.executeBooleanVariable(block);
-                break;
-            }
+                case 'string_variable': {
+                    this.excuteStringVariable(block);
+                    break;
+                }
 
-            case 'assignment': {
-                this.executeAssignment(block);
-                break;
-            }
+                case 'boolean_variable': {
+                    this.executeBooleanVariable(block);
+                    break;
+                }
 
-            case 'output': {
-                this.executeOutput(block);
-                break;
-            }
+                case 'assignment': {
+                    this.executeAssignment(block);
+                    break;
+                }
 
-            case 'if': {
-                this.excuteIf(block);
-                break;
-            }
+                case 'output': {
+                    this.executeOutput(block);
+                    break;
+                }
 
-            case 'while': {
-                this.executeWhile(block);
-                break;
-            }
+                case 'if': {
+                    this.excuteIf(block);
+                    break;
+                }
 
-            case 'array': {
-                this.executeArray(block);
-                break;
-            }
+                case 'while': {
+                    this.executeWhile(block);
+                    break;
+                }
 
-            case 'for': {
-                this.executeFor(block);
-                break;
-            }
-            
-            case 'nothing': {
-                break;
-            }
+                case 'array': {
+                    this.executeArray(block);
+                    break;
+                }
 
-            default: {
-                throw new Error(`Неизвестный тип блока ${blockType}`);
+                case 'for': {
+                    this.executeFor(block);
+                    break;
+                }
+
+                case 'nothing': {
+                    break;
+                }
+
+                default: {
+                    throw new Error(`Неизвестный тип блока ${blockType}`);
+                }
             }
+        } catch (error) {
+            block.classList.add('error');
+            throw error;
         }
     }
 

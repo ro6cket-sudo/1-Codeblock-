@@ -493,3 +493,18 @@ body.dragging {
     background-color: #ff0000 !important;
     transform: scale(1.2);
 }
+
+.block.error {
+    border: 3px solid red;
+    border-color: #ff0000;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0% {border-color: #ce0000;
+    }
+    50% {border-color: #ff0043;
+    }
+    100% {border-color: red;
+    }
+}

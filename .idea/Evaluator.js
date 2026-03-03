@@ -38,7 +38,7 @@ export class Evaluator {
         if (node.type === 'Variable')
         {
             if (!(node.name in this.variables))
-                throw new Error(`Переменная${node.name} не обнaружена`);
+                throw new Error(`Переменная ${node.name} не обнaружена`);
             return this.variables[node.name];
         }
 

@@ -40,18 +40,19 @@ function runProgram() {
         // }
     // });
 
-    // try{
-    //     interpretator.executeAll(workspace);
-    //     logger.log("Программа завершена.", "success");
-    // }
-    // catch(err){
-    //     logger.error(err);
-    // }
+    try{
+        interpretator.executeAll(workspace);
+        logger.log("Программа завершена.", "success");
+    }
+    catch(err){
+        logger.error(err);
+        console.error(err);
+    }
 
 
-    interpretator.executeAll(workspace);
-
-    logger.log("Программа завершена.", "success");
+    // interpretator.executeAll(workspace);
+    //
+    // logger.log("Программа завершена.", "success");
 }
 
 document.getElementById('run-btn').addEventListener('click', runProgram);
