@@ -67,12 +67,12 @@ body.dragging {
 
 .block-footer {
     height: 10px;
-    min-width: 400px;
+    min-width: 0;
     width: 100%;
     box-sizing: border-box;
-    background-color: #04cafc;
+    background-color: #8fd3ff;
     border-radius: 0 5px 5px 5px;
-    border: 1px solid #eb04fc;
+    border: 1px solid #3b87c8;
 }
 
 .container-block .block-footer{
@@ -377,19 +377,14 @@ body.dragging {
     flex-grow: 1;
 }
 
-.block[data-type="if"]{
-    background-color: #04cafc;
-    border: 1px solid #eb04fc;
-}
-
-.block[data-type="else"]{
-    background-color: #04cafc;
-    border: 1px solid #eb04fc;
-}
-
-.block[data-type="while"]{
-    background-color: #04cafc;
-    border: 1px solid #eb04fc;
+.block[data-type="if"],
+.block[data-type="else"],
+.block[data-type="while"],
+.block[data-type="for"]{
+    width: fit-content;
+    min-width: 0;
+    padding-left: 0;
+    margin-left: 0;
 }
 
 .for-input {
@@ -398,7 +393,7 @@ body.dragging {
     border: 1px solid #1520b8; 
     border-radius: 4px;
     padding: 2px 8px;
-    font-size: 14px;
+    font-size: 16px;
     background-color: white;
     outline: none;
     box-sizing: border-box;
@@ -434,6 +429,49 @@ body.dragging {
 
 .block:not(.block-nothing):hover {
     filter: brightness(1.1);
+}
+
+.block[data-type="if"] .condition-header,
+.block[data-type="while"] .condition-header,
+.block[data-type="else"] .condition-header,
+.block[data-type="for"] .condition-header {
+    background-color: #8fd3ff; 
+    border: 1px solid #3b87c8;
+    border-radius: 18px;
+    padding: 8px 14px;
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    margin-left: 0;
+    gap: 12px;
+
+    min-width: 220px;
+    width: auto;
+}
+
+.condition-header .condition-label {
+    font-size: 16px;
+    font-weight: 500;
+    
+}
+
+.condition-header .condition-input-frame {
+    background-color: #495057;
+    padding: 3px;
+    border-radius: 10px;
+    display: flex;
+    overflow: hidden;
+}
+
+.condition-header .code-input {
+    border: none;
+    border-radius: 6px;
+    padding: 4px 10px;
+    background-color: #ffffff;
+    outline: none;
+    box-sizing: border-box;
+    min-width: 120px;
+    font-size: 13px;
 }
 
 .trash-button {
