@@ -1,5 +1,5 @@
 import {Token,TokensTypes} from './tokens.js';
-import {NumberNode,VariableNode,BinaryOperationNode,OutputNode} from './ast.js'
+import {NumberNode,VariableNode,BinaryOperationNode,OutputNode,ArrayAccessNode, StringNode, BooleanNode, CharNode} from './ast.js'
 
 export class Parser {
     tokens = [];
@@ -103,6 +103,25 @@ export class Parser {
                 throw new Error("Ожидалась ')'");
             }
         }
+
+        if (this.currentToken.type === TokensTypes.STRING) {
+            let token = this.currentToken;
+            this.NextToken();
+            return new StringNode(token.value.slice(1, -1));
+        }
+
+        if (this.currentToken.type === TokensTypes.CHAR) {
+            let token = this.currentToken;
+            this.NextToken();
+            return new CharNode(token.value.slice(1, -1));
+        }
+
+        if (this.currentToken.type === TokensTypes.BOOLEAN) {
+            let token = this.currentToken;
+            this.NextToken();
+            return new BooleanNode(token.value === 'true');
+        }
+
         if(this.currentToken.type === TokensTypes.NUMBER){
             let token = this.currentToken;
             this.NextToken();
@@ -112,6 +131,17 @@ export class Parser {
         {
             let token = this.currentToken;
             this.NextToken();
+
+            if (this.currentToken.type === TokensTypes.OPENBRACKET) {
+                this.NextToken();
+                const indexExpression = this.parseExpression();
+                if (this.currentToken.type !== TokensTypes.CLOSEBRACKET) {
+                    throw new Error("Ожидалась ']'");
+                }
+                this.NextToken();
+                return new ArrayAccessNode(token.value, indexExpression);
+            }
+
             return new VariableNode(token.value);
         }
 

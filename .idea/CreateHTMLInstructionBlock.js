@@ -59,6 +59,26 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             </div>
         `;
 
+    } else if (codeBlock.type === 'string_variable'){
+        block.classList.add('block-string');
+        if (isGhost) block.classList.add('ghost');
+
+        block.innerHTML = `
+            <span class="variable-label">variable</span>
+            <div class="input-container">
+                <input type="text" class="variable-input" ${isGhost ? 'disabled' : ''}>
+            </div>
+        `;
+    } else if (codeBlock.type === 'boolean_variable'){
+        block.classList.add('block-boolean');
+        if (isGhost) block.classList.add('ghost');
+
+        block.innerHTML = `
+            <span class="variable-label">variable</span>
+            <div class="input-container">
+                <input type="text" class="variable-input" ${isGhost ? 'disabled' : ''}>
+            </div>
+        `;
     } else if (codeBlock.type === 'assignment'){
         block.classList.add('block-assignment');
         if (isGhost) block.classList.add('ghost');
@@ -81,6 +101,20 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             <input type="text" class="output-input" ${isGhost ? 'disabled' : ''}>
         </div>
     `;
+    } else if (codeBlock.type === 'array') {
+        block.classList.add('block-array');
+        block.innerHTML = `
+            <span class="label">array</span>
+            <div class="input-container">
+                <input type="text" class="array-name-input" placeholder="имя" ${isGhost ? 'disabled' : ''}>
+            </div>
+            <div class="input-container">
+                <input type="text" class="array-size-input" placeholder="размер" ${isGhost ? 'disabled' : ''}>
+            </div>
+        `;
+    } else if (codeBlock.type === 'nothing') {
+        block.classList.add('block-nothing');
+        block.innerHTML = ``;
     } else {
         block.innerHTML = `
             <h4 class="blockName">${codeBlock.type}</h4>
