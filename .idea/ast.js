@@ -41,3 +41,20 @@ export class ArrayAccessNode extends Node {
         this.index = indexExpression;
     }
 }
+
+export class ReturnNode extends Node {
+    constructor(expression) {
+        super();
+        this.type = 'Return';
+        this.expression = expression;
+    }
+}
+
+export class FunctionCallNode extends Node {
+    constructor(name, args) {
+        super();
+        this.type = 'FunctionCall';
+        this.name = name;
+        this.args = args;
+    }
+}

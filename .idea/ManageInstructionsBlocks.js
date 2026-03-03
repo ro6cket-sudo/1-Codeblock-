@@ -41,7 +41,7 @@ export function addBlockAtPosition(type, targetPlaceholder) {
     const codeBlock = new CodeBlock(id, type);
     blocks.set(id, codeBlock);
 
-    if (['if', 'while', 'for', 'else'].includes(type)) {
+    if (['if', 'while', 'for', 'else', 'function'].includes(type)) {
         const endId = crypto.randomUUID();
         const endBlock = new CodeBlock(endId, 'end');
         endBlock.parentID = id;

@@ -193,7 +193,9 @@ body.dragging {
     padding: 10px;
     min-height: 0;
     border-radius: 10px;
-    flex: 1;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 400px;
 }
 
 .workspace::-webkit-scrollbar {
@@ -222,6 +224,7 @@ body.dragging {
 .debug-panel{
     /*position: fixed;*/
     width: 350px;
+    flex-shrink: 3;
     min-width: 100px;
     /*bottom: 10px;*/
     /*left: 10px;*/
@@ -405,6 +408,70 @@ body.dragging {
     align-items: center;
     gap: 8px;
     margin-left: 10px;
+}
+
+.block-return {
+    background-color: #ff5252;
+    border: 2px solid #c62828;
+    border-radius: 15px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 200px;
+}
+
+.block-return .input-container {
+    background-color: #495057;
+    padding: 3px;
+    border-radius: 8px;
+    display: flex;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.block-return input {
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: white;
+    outline: none;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+
+
+.block-call {
+    background-color: #a1887f;
+    border: 2px solid #795548;
+    border-radius: 15px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 200px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+.block-call .input-container {
+    background-color: #495057;
+    padding: 3px;
+    border-radius: 8px;
+    display: flex;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.block-call input {
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: white;
+    outline: none;
+    box-sizing: border-box;
+    flex-grow: 1;
 }
 
 .block[data-type="array"]{

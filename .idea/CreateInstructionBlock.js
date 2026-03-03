@@ -111,6 +111,14 @@ function getDragAfterElement(container, y) {
         });
 
         return bestIF;
+    } else if (currentType === 'return') {
+        if (!isContainerInsideFunction(container)) {
+            return null;
+        }
+    } else if (currentType === 'functon') {
+        if (container.classList.contains('nested-workspace')) {
+            return null;
+        }
     }
         
     return draggableElements.reduce((closest, child) => {
@@ -123,9 +131,8 @@ function getDragAfterElement(container, y) {
                 return closest;
             }
             return {offset: offset, element: child };
-        } else {
-            return closest;
-        }
+        } 
+        return closest;
     }, {offset: Number.NEGATIVE_INFINITY }).element;
 }
 
@@ -177,6 +184,30 @@ function onMouseMove(e) {
                 } else {
                     activeContainer.insertBefore(placeholder, afterElement.nextSibling);
                 }
+            } else if (currentType === 'return') {
+                if (afterElement == null) {
+                    if (isContainerInsideFunction(activeContainer)) {
+                        activeContainer.appendChild(placeholder);
+                    } else {
+                        if (placeholder.parentNode) {
+                            placeholder.remove();
+                        }
+                    }
+                } else {
+                    activeContainer.insertBefore(placeholder, afterElement);
+                }
+            } else if (currentType === 'function') {
+                if (afterElement == null) {
+                    if (activeContainer.classList.contains('workspace')) {
+                        activeContainer.appendChild(placeholder);
+                    } else {
+                        if (placeholder.parentNode) {
+                            placeholder.remove();
+                        }
+                    }
+                } else {
+                    activeContainer.insertBefore(placeholder, afterElement);
+                }
             } else {
                 if (afterElement == null) {
                     activeContainer.appendChild(placeholder);
@@ -191,6 +222,20 @@ function onMouseMove(e) {
             }
         }  
     } 
+}
+
+function isContainerInsideFunction(container) {
+    let current = container;
+
+    while (current) {
+        const parentBlock = current.closest('.block');
+        if (!parentBlock) break;
+        if (parentBlock.dataset.type === 'function') {
+            return true;
+        }
+        current = parentBlock.parentElement;
+    }
+    return false;
 }
 
 function onMouseUp(e) {

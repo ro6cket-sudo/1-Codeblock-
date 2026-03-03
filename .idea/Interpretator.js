@@ -5,7 +5,10 @@ import { Evaluator } from './Evaluator.js';
 
 export class Interpretator {
     variables = {};
+    functions = {};
+
     currentBlock = null;
+
     constructor(variables) {
         this.variables = variables;
     }
@@ -15,7 +18,7 @@ export class Interpretator {
         const tokens = lexer.Analys();
         const parser = new Parser(tokens);
         const ast = parser.parseOR();
-        const evaluator = new Evaluator(this.variables);
+        const evaluator = new Evaluator(this.variables, this.functions);
         return evaluator.evaluate(ast);
     }
 
@@ -72,6 +75,22 @@ export class Interpretator {
             }
             
             case 'nothing': {
+                break;
+            }
+
+            case 'function': {
+                this.executeFunction(block);
+                break;
+            }
+
+            case 'return': {
+                const input = block.querySelector('.return-input');
+                const value = this.evaluateExpression(input.value.trim());
+                throw new ReturnException(value);
+            }
+
+            case 'call': {
+                this.executeCall(block);
                 break;
             }
 
@@ -279,5 +298,83 @@ export class Interpretator {
 
         const size = this.evaluateExpression(sizeExpression);
         this.variables[name] = new Array(size).fill(0);
+    }
+
+    executeFunction(block) {
+        const nameInput = block.querySelector('.function-name-input');
+        const paramsInput = block.querySelector('.function-params-input');
+
+        const name = nameInput.value.trim();
+        const paramsString = paramsInput.value.trim();
+        const params = paramsString ? paramsString.split(',').map(s => s.trim()) : [];
+
+        if (!name) throw new Error('Имя функции не должно быть пустым');
+        if (name in this.functions) throw new Error(`Функция ${name} уже существует`);
+
+        const nested = block.querySelector('.nested-workspace');
+        this.functions[name] = (args) => {
+            return this.callFunction(params, args, nested);
+        };
+    }
+
+    callFunction(params, argValues, nested) {
+        const savedVariables = {...this.variables};
+
+        this.variables = {...savedVariables};
+
+        for (let i = 0; i < params.length; i++)  {
+            this.variables[params[i]] = argValues[i] ?? 0;
+        }
+
+        let returnValue = 0;
+
+        try {
+            this.executeAll(nested);
+        } catch (e) {
+            if (e instanceof ReturnException) {
+                returnValue = e.value;
+            } else {
+                throw e;
+            }
+        }
+
+        for (const key of Object.keys(this.variables)) {
+            if (!params.includes(key)) {
+                savedVariables[key] = this.variables[key];
+            }
+        }
+
+        this.variables = savedVariables;
+        return returnValue;
+    }
+
+    executeCall(block) {
+        const input = block.querySelector('.call-input');
+        const callString = input.value.trim();
+
+        if (!callString) {
+            throw new Error('Пустая строка вызова функции');
+        }
+
+        const match = callString.match(/^([a-zA-Z_][a-zA-Z0-0_]*)\s*\((.*)\)$/);
+        if (!match) {
+            throw new Error('Некорректный ввож функции');
+        }
+
+        const funcName = match[1];
+        const argsString = match[2];
+        const args = argsString ? argsString.split(',').map(s => this.evaluateExpression(s.trim())) : [];
+
+        if (!(funcName in this.functions)) {
+            throw new Error(`Функция ${funcName} не найдена`);
+        }
+
+        this.functions[funcName](args);
+    }
+}
+
+class ReturnException {
+    constructor(value) {
+        this.value = value;
     }
 }

@@ -1,5 +1,5 @@
 import {Token,TokensTypes} from './tokens.js';
-import {NumberNode,VariableNode,BinaryOperationNode,OutputNode,ArrayAccessNode} from './ast.js'
+import { NumberNode, VariableNode, BinaryOperationNode, OutputNode, ArrayAccessNode, ReturnNode, FunctionCallNode } from './ast.js'
 
 export class Parser {
     tokens = [];
@@ -28,17 +28,27 @@ export class Parser {
     }
 
     parseStatement() {
-    const token = this.currentToken;
+        if (this.currentToken.type === TokensTypes.RETURN) {
+            return this.parseReturn();
+        }
 
-    switch (token.type) {
-        case TokensTypes.OUTPUT:
-            return this.parseOutput();
+        const token = this.currentToken;
+
+        switch (token.type) {
+            case TokensTypes.OUTPUT:
+                return this.parseOutput();
         // case TokensTypes.VARIABLE:
         //     return this.parseAssignment();
 
         default:
             return this.parseOR();
         }
+    }
+
+    parseReturn() {
+        this.NextToken();
+        const expression = this.parseOR();
+        return new ReturnNode(expression);
     }
 
     parseOR() {
@@ -113,6 +123,24 @@ export class Parser {
             let token = this.currentToken;
             this.NextToken();
 
+            if (this.currentToken.type === TokensTypes.OPENPARENTHIST) {
+                this.NextToken();
+                const args = [];
+
+                while (this.currentToken.type !== TokensTypes.CLOSEPARENTHIST && this.currentToken.type !== TokensTypes.ENDOFEXPRESS) {
+                    args.push(this.parseOR());
+                    if (this.currentToken.type == TokensTypes.COMMA)  {
+                        this.NextToken();
+                    }
+                }
+
+                if (this.currentToken.type !== TokensTypes.CLOSEPARENTHIST) {
+                    throw new Error("Ожидалась ')'");
+                }
+                this.NextToken();
+                return new FunctionCallNode(token.value, args);
+            }
+
             if (this.currentToken.type === TokensTypes.OPENBRACKET) {
                 this.NextToken();
                 const indexExpression = this.parseExpression();
@@ -130,10 +158,10 @@ export class Parser {
     }
 
     parseOutput() {
-    this.NextToken();
+        this.NextToken();
     
-    const expression = this.parseExpression();
+        const expression = this.parseExpression();
     
-    return new OutputNode(expression);
-}
+        return new OutputNode(expression);
+    }
 }

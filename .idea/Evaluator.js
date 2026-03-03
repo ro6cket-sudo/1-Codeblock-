@@ -3,8 +3,9 @@ import { Parser } from './parser.js';
 import {logger} from './ConsoleLogger.js';
 
 export class Evaluator {
-    constructor (variables) {
+    constructor (variables, functions = {}) {
         this.variables = variables;
+        this.functions = functions;
     }
 
     evaluate (node) {
@@ -53,6 +54,15 @@ export class Evaluator {
             if (index < 0 || index >= arr.length)
                 throw new Error(`Индекс ${index} вне диапазона массива ${node.name}`);
             return arr[index];
+        }
+
+        if (node.type === 'FunctionCall') {
+            if (!(node.name in this.functions)) {
+                throw new Error(`Функция ${node.name} не обнаружена`);
+            }
+
+            const argValues = node.args.map(arg => this.evaluate(arg));
+            return this.functions[node.name](argValues);
         }
     }
 }

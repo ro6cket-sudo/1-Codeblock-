@@ -13,7 +13,7 @@ function makeBlock(type, container = workspace) {
     const htmlBlock = createHTMLInstructionBlock(codeBlock);
     htmlBlock.dataset.id = id;
 
-    if (['if', 'while', 'for', 'else'].includes(type)) {
+    if (['if', 'while', 'for', 'else', 'function'].includes(type)) {
         const endId = crypto.randomUUID();
         const endBlock = new CodeBlock(endId, 'end');
         endBlock.parentID = id;
@@ -75,6 +75,25 @@ function makeNothing(n = 1) {
     }
 }
 
+function makeFunction(name, params, container = workspace) {
+    const el = makeBlock('function', container);
+    el.querySelector('.function-name-input').value = name;
+    el.querySelector('.function-params-input').value = params;
+    return el.querySelector('.nested-workspace');
+}
+
+function makeReturn(expression, container = workspace) {
+    const el = makeBlock('return', container);
+    el.querySelector('.return-input').value = expression;
+    return el;
+}
+
+function makeCall(expression, container = workspace) {
+    const el = makeBlock('call', container);
+    el.querySelector('.call-input').value = expression;
+    return el;
+}
+
 export function presetBubbleSort() {
     clearAllBlocks();
 
@@ -110,4 +129,32 @@ export function presetBubbleSort() {
     sortBlocks();
 }
 
+export function presetGCD() {
+    clearAllBlocks();
+
+    const functionNested = makeFunction('gcd', 'a, b');
+
+    const ifBlock = makeBlock('if', functionNested);
+    ifBlock.querySelector('.code-input').value = 'b == 0';
+
+    const ifNested = ifBlock.querySelector('.nested-workspace');
+    makeReturn('a', ifNested);
+
+    makeReturn('gcd(b, a % b)', functionNested);
+
+    makeNothing(4);
+
+    makeVariable('x, y');
+    makeAssignment('x', '300');
+    makeAssignment('y', '108');
+
+    makeNothing(1);
+    
+    makeOutput('gcd(x, y)');
+
+    sortBlocks();
+}
+
+
 document.getElementById('preset-bubble-sort').addEventListener('click', presetBubbleSort);
+document.getElementById('preset-gcd').addEventListener('click', presetGCD);
