@@ -10,6 +10,8 @@ function runProgram() {
     const globalVariables = {};
     const interpretator = new Interpretator(globalVariables);
 
+    document.querySelectorAll('.block.error').forEach(block => block.classList.remove('error'));
+
     // blocks.forEach((block, index) => {
         // try {
         //     let code = "";
