@@ -6,26 +6,37 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
     block.dataset.type = codeBlock.type;
 
 
-    if (codeBlock.type === 'if' || codeBlock.type === 'while' || codeBlock.type === 'else') {
+    if (codeBlock.type === 'if' || codeBlock.type === 'while') {
         block.classList.add('container-block');
 
         block.innerHTML = `
-        <div class="block-header">
-            <h4 class="blockName">${codeBlock.type}</h4>
-            ${!isGhost && (codeBlock.type !== 'else') ? '<input class="code-input">' : ''}
+        <div class="block-header condition-header">
+            <span class="condition-label">${codeBlock.type}</span>
+            <div class="input-container condition-input-frame">
+                <input class="code-input">
+            </div>
+        </div>
+        ${!isGhost ? 
+            '<div class="nested-workspace"></div>' +
+            '<div class="block-footer"></div>' : ''}
+        `;
+    } else if (codeBlock.type === 'else') {
+        block.classList.add('container-block');
+        
+        block.innerHTML = `
+        <div class="block-header condition-header">
+            <span class="condition-label">else</span>
         </div>
         ${!isGhost ? 
             '<div class="nested-workspace"></div>' +
             '<div class="block-footer"></div>' : ''}
         `;
 
-        
-
     } else if (codeBlock.type === 'for') {
     block.classList.add('container-block');
     block.innerHTML = `
-        <div class="block-header">
-            <h4 class="blockName">for</h4>
+        <div class="block-header condition-header">
+            <span class="condition-label">for</span>
             <div class="for-inputs-container">
                 <input class="for-input for-init" placeholder="переменная">
                 <input class="for-input for-cond" placeholder="условие">
@@ -36,6 +47,7 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             '<div class="nested-workspace"></div>' +
             '<div class="block-footer"></div>' : ''} `;
     } 
+    
     else if (codeBlock.type === 'variable') {
         block.classList.add('block-variable');
         if (isGhost) block.classList.add('ghost');
@@ -79,6 +91,7 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
                 <input type="text" class="variable-input" ${isGhost ? 'disabled' : ''}>
             </div>
         `;
+
     } else if (codeBlock.type === 'output') {
     block.classList.add('block-output');
     block.innerHTML = `
