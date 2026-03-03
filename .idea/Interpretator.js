@@ -57,7 +57,7 @@ export class Interpretator {
             }
 
             case 'while': {
-                this.excuteVariable(block);
+                this.executeWhile(block);
                 break;
             }
 
@@ -219,6 +219,30 @@ export class Interpretator {
                 this.executeAll(nested);
             }
             this.executeStepExpression(step);
+        }
+    }
+    
+    executeWhile(block) {
+        const input = block.querySelector('.code-input');
+        const condition = input?.value.trim();
+
+        if (!condition) {
+            throw new Error('Блок while не содержит условие');
+        }
+
+        const nested = block.querySelector('.nested-workspace');
+
+        let iterations = 0;
+        const MAX_ITERATIONS = 100000;
+
+        while (this.evaluateExpression(condition)) {
+            if (iterations++ > MAX_ITERATIONS) {
+                throw new Error('Слишком много итераций в while (возможно, бесконечный цикл)');
+            }
+
+            if (nested) {
+                this.executeAll(nested);
+            }
         }
     }
 }
