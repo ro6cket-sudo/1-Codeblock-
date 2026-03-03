@@ -8,26 +8,39 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
 
     switch (codeBlock.type) {
         case 'if':
-        case 'while':
-        case 'else': {
+        case 'while': {
             block.classList.add('container-block');
 
             block.innerHTML = `
-                <div class="block-header">
-                    <h4 class="blockName">${codeBlock.type}</h4>
-                    ${!isGhost && (codeBlock.type !== 'else') ? '<input class="code-input">' : ''}
+                <div class="block-header condition-header">
+                    <span class="condition-label">${codeBlock.type}</span>
+                    <div class="input-container condition-input-frame">
+                        <input class="code-input">
+                    </div>
                 </div>
                 ${!isGhost ? 
                     '<div class="nested-workspace"></div>' +
                     '<div class="block-footer"></div>' : ''}
-            `; 
+                `;
             break;
+        }
+        case 'else': {
+            block.classList.add('container-block');
+        
+            block.innerHTML = `
+            <div class="block-header condition-header">
+                <span class="condition-label">else</span>
+            </div>
+            ${!isGhost ? 
+                '<div class="nested-workspace"></div>' +
+                '<div class="block-footer"></div>' : ''}
+            `;
         }
         case 'for': {
             block.classList.add('container-block');
             block.innerHTML = `
-                <div class="block-header">
-                    <h4 class="blockName">for</h4>
+                <div class="block-header condition-header">
+                    <span class="condition-label">for</span>
                     <div class="for-inputs-container">
                         <input class="for-input for-init" placeholder="переменная">
                         <input class="for-input for-cond" placeholder="условие">
@@ -52,6 +65,17 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             `;
             break;
         }
+        case 'boolean_variable': {
+            block.classList.add('block-boolean');
+            if (isGhost) block.classList.add('ghost');
+
+            block.innerHTML = `
+                <span class="variable-label">variable</span>
+                <div class="input-container">
+                    <input type="text" class="variable-input">
+                </div>
+            `;
+        }
         case 'assignment': {
             block.classList.add('block-assignment');
             if (isGhost) block.classList.add('ghost');
@@ -59,7 +83,7 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             block.innerHTML = `
                 <span class="assignment-label">assignment</span>
                 <div class="input-container var-name-frame">
-                    <input type="text" class="variable-input">
+                    <input type="text" class="variable-input assignment-var-input" autocomplete="off" list="variables-list">
                 </div>
                 <div class="input-container var-value-frame">
                     <input type="text" class="variable-input">

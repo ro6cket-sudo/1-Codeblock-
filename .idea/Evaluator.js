@@ -8,38 +8,62 @@ export class Evaluator {
         this.functions = functions;
     }
 
+    getType(value){
+        if (typeof(value) === 'number') {
+            return 'number';
+        }
+        if (typeof(value) === 'string') {
+            return 'string';
+        }
+        if (typeof(value) === 'boolean') {
+            return 'boolean';
+        }
+    }
+
     evaluate (node) {
         if (node.type === 'Number')
             return parseFloat(node.value);
 
+        if (node.type === 'String'){
+            return String(node.value);
+        }
+
+        if (node.type === 'Char'){
+            return String(node.value);
+        }
+
+        if (node.type === 'Boolean'){
+            return Boolean(node.value);
+        }
+
         if (node.type === 'Variable')
         {
             if (!(node.name in this.variables))
-                throw new Error(`Переменная${node.name} не обнaружена`);
+                throw new Error(`Переменная ${node.name} не обнaружена`);
             return this.variables[node.name];
         }
 
         if (node.type === 'BinaryOperation'){
+
             const left = this.evaluate(node.left);
             const right = this.evaluate(node.right);
 
-            switch (node.operator){
-                case '>': return left > right;
-                case '<':  return left < right;
-                case '>=': return left >= right;
-                case '<=': return left <= right;
-                case '==': return left === right;
-                case '!=': return left !== right;
-                case '+': return left + right;
-                case '-': return left - right;
-                case '*': return left * right;
-                case '/':
-                    if (right === 0) throw new Error("Деление на 0");
-                    return left / right;
-                case '%':
-                    if (right === 0) throw new Error("Остаток от деления на 0");
-                    return left % right;
+            const leftType = this.getType(left);
+            const rightType = this.getType(right);
+
+            if (leftType === 'number' && rightType === 'number'){
+                return this.evaluateNumber(node.operator, left, right);
             }
+
+            if (leftType === 'string' && rightType === 'string'){
+                return this.evaluateString(node.operator, left, right);
+            }
+
+            if (leftType === 'boolean' && rightType === 'boolean'){
+                return this.evaluateBoolean(node.operator, left, right);
+            }
+
+            throw new Error(`Оператор ${operator} не поддерживается для строк`)
         }
 
         if (node.type === 'ArrayAccess') {
@@ -63,6 +87,68 @@ export class Evaluator {
 
             const argValues = node.args.map(arg => this.evaluate(arg));
             return this.functions[node.name](argValues);
+        }
+    }
+
+    evaluateNumber(operator, left, right) {
+        switch (operator) {
+            case '>':
+                return left > right;
+            case '<':
+                return left < right;
+            case '>=':
+                return left >= right;
+            case '<=':
+                return left <= right;
+            case '==':
+                return left === right;
+            case '!=':
+                return left !== right;
+            case '+':
+                return left + right;
+            case '-':
+                return left - right;
+            case '*':
+                return left * right;
+            case '/':
+                if (right === 0) throw new Error("Деление на 0");
+                return left / right;
+            case '%':
+                if (right === 0) throw new Error("Остаток от деления на 0");
+                return left % right;
+        }
+    }
+
+    evaluateString (operator, left, right) {
+        switch (operator) {
+            case '>':
+                return left > right;
+            case '<':
+                return left < right;
+            case '>=':
+                return left >= right;
+            case '<=':
+                return left <= right;
+            case '==':
+                return left === right;
+            case '!=':
+                return left !== right;
+            case '+':
+                return left + right;
+           default: throw new Error(`Оператор ${operator} не поддерживается для строк`)
+        }
+    }
+
+    // evaluateChar (operator, left, right) {
+    // }
+
+    evaluateBoolean (operator, left, right) {
+        switch (operator) {
+            case 'and': return left && right;
+            case 'or': return left || right;
+            case '==': return left === right;
+            case '!=': return left !== right;
+            default: throw new Error(`Оператор ${operator} не поддерживается для булевых значений`)
         }
     }
 }

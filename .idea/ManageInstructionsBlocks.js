@@ -116,5 +116,43 @@ export function removeBlockWithNestedWorkspace(block) {
     block.remove();
 }
 
+function collectVariableNames() {
+    const names = new Set();
+    const variableBlocks = document.querySelectorAll('.workspace .block[data-type="variable"]');
+
+    variableBlocks.forEach(block => {
+        const input = block.querySelector('.variable-input');
+        if (!input) return;
+
+        const text = input.value.trim();
+        if (!text) return;
+
+        text.split(',')
+            .map(s => s.trim())
+            .filter(Boolean)
+            .forEach(name => names.add(name));
+    });
+
+    return Array.from(names);
+}
+
+function updateVariablesDatalist() {
+    const datalist = document.getElementById('variables-list');
+    if (!datalist) return;
+
+    datalist.innerHTML = '';
+
+    collectVariableNames().forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        datalist.appendChild(option);
+    });
+}
+
+document.addEventListener('focusin', (e) => {
+    if (e.target.matches('.assignment-var-input')) {
+        updateVariablesDatalist();
+    }
+});
 
 window.g = () => console.table(Array.from(blocks.values()), ['id', 'type'])

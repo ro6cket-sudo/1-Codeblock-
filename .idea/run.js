@@ -10,6 +10,8 @@ function runProgram() {
     const globalVariables = {};
     const interpretator = new Interpretator(globalVariables);
 
+    document.querySelectorAll('.block.error').forEach(block => block.classList.remove('error'));
+
     // blocks.forEach((block, index) => {
         // try {
         //     let code = "";
@@ -40,18 +42,19 @@ function runProgram() {
         // }
     // });
 
-    // try{
-    //     interpretator.executeAll(workspace);
-    //     logger.log("Программа завершена.", "success");
-    // }
-    // catch(err){
-    //     logger.error(err);
-    // }
+    try{
+        interpretator.executeAll(workspace);
+        logger.log("Программа завершена.", "success");
+    }
+    catch(err){
+        logger.error(err);
+        console.error(err);
+    }
 
 
-    interpretator.executeAll(workspace);
-
-    logger.log("Программа завершена.", "success");
+    // interpretator.executeAll(workspace);
+    //
+    // logger.log("Программа завершена.", "success");
 }
 
 document.getElementById('run-btn').addEventListener('click', runProgram);

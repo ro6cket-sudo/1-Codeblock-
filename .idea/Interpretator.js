@@ -14,7 +14,7 @@ export class Interpretator {
     }
 
     evaluateExpression(expression) {
-        const lexer = new Lexer(expression);
+        const lexer = new Lexer(expression);x
         const tokens = lexer.Analys();
         const parser = new Parser(tokens);
         const ast = parser.parseOR();
@@ -38,65 +38,80 @@ export class Interpretator {
 
     excuteBlock(block) {
         const blockType = block.dataset.type;
-        switch (blockType) {
-            case 'variable': {
-                this.excuteVariable(block);
-                break;
-            }
 
-            case 'assignment': {
-                this.executeAssignment(block);
-                break;
-            }
+        try {
+            switch (blockType) {
+                case 'variable': {
+                    this.excuteVariable(block);
+                    break;
+                }
 
-            case 'output': {
-                this.executeOutput(block);
-                break;
-            }
+                case 'string_variable': {
+                    this.excuteStringVariable(block);
+                    break;
+                }
 
-            case 'if': {
-                this.excuteIf(block);
-                break;
-            }
+                case 'boolean_variable': {
+                    this.executeBooleanVariable(block);
+                    break;
+                }
 
-            case 'while': {
-                this.excuteVariable(block);
-                break;
-            }
+                case 'assignment': {
+                    this.executeAssignment(block);
+                    break;
+                }
 
-            case 'array': {
-                this.executeArray(block);
-                break;
-            }
+                case 'output': {
+                    this.executeOutput(block);
+                    break;
+                }
 
-            case 'for': {
-                this.executeFor(block);
-                break;
-            }
-            
-            case 'nothing': {
-                break;
-            }
+                case 'if': {
+                    this.excuteIf(block);
+                    break;
+                }
 
-            case 'function': {
-                this.executeFunction(block);
-                break;
-            }
+                case 'function': {
+                    this.executeFunction(block);
+                    break;
+                }
 
-            case 'return': {
-                const input = block.querySelector('.return-input');
-                const value = this.evaluateExpression(input.value.trim());
-                throw new ReturnException(value);
-            }
+                case 'return': {
+                    const input = block.querySelector('.return-input');
+                    const value = this.evaluateExpression(input.value.trim());
+                    throw new ReturnException(value);
+                }
 
-            case 'call': {
-                this.executeCall(block);
-                break;
-            }
+                case 'call': {
+                    this.executeCall(block);
+                    break;
+                }
+                case 'while': {
+                    this.executeWhile(block);
+                    break;
+                }
 
-            default: {
-                throw new Error(`Неизвестный тип блока ${blockType}`);
+                case 'array': {
+                    this.executeArray(block);
+                    break;
+                }
+
+                case 'for': {
+                    this.executeFor(block);
+                    break;
+                }
+
+                case 'nothing': {
+                    break;
+                }
+
+                default: {
+                    throw new Error(`Неизвестный тип блока ${blockType}`);
+                }
             }
+        } catch (error) {
+            block.classList.add('error');
+            throw error;
         }
     }
 
@@ -115,7 +130,42 @@ export class Interpretator {
             }
 
             this.variables[name] = 0;
-            // по тз "считаем, что все вновь объявленные переменные по умолчанию равны 0."
+        }
+    }
+
+    executeStringVariable(block) {
+        const input = block.querySelector('.variable-input');
+        const string = input.value.trim();
+        if (!string){
+            throw new Error('Nothing to excute variable found');
+        }
+
+        const names = string.split(',').map(s => s.trim()).filter(s => s.length > 0);
+
+        for (const name of names){
+            if (name in this.variables) {
+                throw new Error(`Переменная ${name} уже существует`);
+            }
+
+            this.variables[name] = "";
+        }
+    }
+
+    executeBooleanVariable(block) {
+        const input = block.querySelector('.variable-input');
+        const string = input.value.trim();
+        if (!string){
+            throw new Error('Nothing to excute variable found');
+        }
+
+        const names = string.split(',').map(s => s.trim()).filter(s => s.length > 0);
+
+        for (const name of names){
+            if (name in this.variables) {
+                throw new Error(`Переменная ${name} уже существует`);
+            }
+
+            this.variables[name] = false;
         }
     }
 
@@ -370,6 +420,30 @@ export class Interpretator {
         }
 
         this.functions[funcName](args);
+    }
+
+    executeWhile(block) {
+        const input = block.querySelector('.code-input');
+        const condition = input?.value.trim();
+
+        if (!condition) {
+            throw new Error('Блок while не содержит условие');
+        }
+
+        const nested = block.querySelector('.nested-workspace');
+
+        let iterations = 0;
+        const MAX_ITERATIONS = 100000;
+
+        while (this.evaluateExpression(condition)) {
+            if (iterations++ > MAX_ITERATIONS) {
+                throw new Error('Слишком много итераций в while (возможно, бесконечный цикл)');
+            }
+
+            if (nested) {
+                this.executeAll(nested);
+            }
+        }
     }
 }
 
