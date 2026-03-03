@@ -144,7 +144,6 @@ body.dragging {
 .instruction_set{
     width: 220px;
     background-color: #ecf0f1;
-    border-right: 10px solid #137abf;
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -198,23 +197,31 @@ body.dragging {
     flex-basis: 400px;
 }
 
+.instruction_set::-webkit-scrollbar,
+.debug-panel::-webkit-scrollbar,
 .workspace::-webkit-scrollbar {
     width: 8px;
 }
 
+.instruction_set::-webkit-scrollbar-track,
+.debug-panel::-webkit-scrollbar-track,
 .workspace::-webkit-scrollbar-track {
     background: transparent;
     border-radius: 10px;
 }
 
+.instruction_set::-webkit-scrollbar-thumb,
+.debug-panel::-webkit-scrollbar-thumb,
 .workspace::-webkit-scrollbar-thumb {
     background: #3c90ff;
     border-radius: 10px;
-    border: 2px solid #50345e;
+    border: 2px solid #6834ca;
 }
 
+.instruction_set::-webkit-scrollbar-thumb:hover,
+.debug-panel::-webkit-scrollbar-thumb:hover,
 .workspace::-webkit-scrollbar-thumb:hover {
-    background: #50345e;
+    background: #6834ca;
 }
 
 .workspace .block input, .workspace .block button {
