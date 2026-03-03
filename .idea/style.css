@@ -304,6 +304,7 @@ body.dragging {
 
 .block-variable,
 .block-string,
+.block-boolean,
 .block-assignment,
 .block-output {
     border-radius: 15px;
