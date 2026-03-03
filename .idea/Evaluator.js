@@ -63,7 +63,7 @@ export class Evaluator {
                 return this.evaluateBoolean(node.operator, left, right);
             }
 
-            throw new Error(`Оператор ${operator} не поддерживается для строк`)
+            throw new Error(`Оператор ${node.operator} не поддерживается для строк`)
         }
 
         if (node.type === 'ArrayAccess') {

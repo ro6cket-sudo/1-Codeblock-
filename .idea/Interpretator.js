@@ -14,7 +14,7 @@ export class Interpretator {
     }
 
     evaluateExpression(expression) {
-        const lexer = new Lexer(expression);x
+        const lexer = new Lexer(expression);
         const tokens = lexer.Analys();
         const parser = new Parser(tokens);
         const ast = parser.parseOR();
@@ -47,7 +47,7 @@ export class Interpretator {
                 }
 
                 case 'string_variable': {
-                    this.excuteStringVariable(block);
+                    this.executeStringVariable(block);
                     break;
                 }
 
@@ -406,9 +406,9 @@ export class Interpretator {
             throw new Error('Пустая строка вызова функции');
         }
 
-        const match = callString.match(/^([a-zA-Z_][a-zA-Z0-0_]*)\s*\((.*)\)$/);
+        const match = callString.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*\((.*)\)$/);
         if (!match) {
-            throw new Error('Некорректный ввож функции');
+            throw new Error('Некорректный ввод функции');
         }
 
         const funcName = match[1];

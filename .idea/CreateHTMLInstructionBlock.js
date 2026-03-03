@@ -35,6 +35,7 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
                 '<div class="nested-workspace"></div>' +
                 '<div class="block-footer"></div>' : ''}
             `;
+            break;
         }
         case 'for': {
             block.classList.add('container-block');
@@ -75,6 +76,7 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
                     <input type="text" class="variable-input">
                 </div>
             `;
+            break;
         }
         case 'assignment': {
             block.classList.add('block-assignment');
