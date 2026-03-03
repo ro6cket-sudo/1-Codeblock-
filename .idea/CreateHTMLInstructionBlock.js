@@ -86,7 +86,7 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
         block.innerHTML = `
             <span class="assignment-label">assignment</span>
             <div class="input-container var-name-frame">
-                <input type="text" class="variable-input" ${isGhost ? 'disabled' : ''}>
+                <input type="text" class="variable-input assignment-var-input" autocomplete="off" list="variables-list" ${isGhost ? 'disabled' : ''}>
             </div>
             <div class="input-container var-value-frame">
                 <input type="text" class="variable-input" ${isGhost ? 'disabled' : ''}>
