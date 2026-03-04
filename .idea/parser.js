@@ -93,7 +93,7 @@ export class Parser {
 
     parseMultiplication() {
         let node = this.parseLiteral();
-        while (this.currentToken.type === TokensTypes.OPERATION && ['*', '/', '%'].includes(this.currentToken.value)) {let operation = this.currentToken.value;
+        while (this.currentToken.type === TokensTypes.OPERATION && ['*', '/', '%', '//'].includes(this.currentToken.value)) {
             let oper = this.currentToken.value;
             this.NextToken();
             node = new BinaryOperationNode(oper, node, this.parseLiteral());
@@ -104,7 +104,7 @@ export class Parser {
     parseLiteral() {
         if(this.currentToken.type === TokensTypes.OPENPARENTHIST){
             this.NextToken();
-            let node = this.parseExpression();
+            let node = this.parseOR();
             if (this.currentToken.type === TokensTypes.CLOSEPARENTHIST) {
                 this.NextToken();
                 return node;

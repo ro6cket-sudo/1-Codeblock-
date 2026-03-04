@@ -190,6 +190,7 @@ body.dragging {
     align-items: flex-start;
     gap: 5px;
     padding: 10px;
+    padding-bottom: 20vh;
     min-height: 0;
     border-radius: 10px;
     flex-grow: 1;

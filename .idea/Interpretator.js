@@ -8,6 +8,7 @@ export class Interpretator {
     functions = {};
 
     currentBlock = null;
+    callDepth = 0;
 
     constructor(variables) {
         this.variables = variables;
@@ -125,7 +126,7 @@ export class Interpretator {
         const names = string.split(',').map(s => s.trim()).filter(s => s.length > 0);
 
         for (const name of names){
-            if (name in this.variables) {
+            if (name in this.variables && this.callDepth === 0) {
                 throw new Error(`Переменная ${name} уже существует`);
             }
 
@@ -143,7 +144,7 @@ export class Interpretator {
         const names = string.split(',').map(s => s.trim()).filter(s => s.length > 0);
 
         for (const name of names){
-            if (name in this.variables) {
+            if (name in this.variables && this.callDepth === 0) {
                 throw new Error(`Переменная ${name} уже существует`);
             }
 
@@ -161,7 +162,7 @@ export class Interpretator {
         const names = string.split(',').map(s => s.trim()).filter(s => s.length > 0);
 
         for (const name of names){
-            if (name in this.variables) {
+            if (name in this.variables && this.callDepth === 0) {
                 throw new Error(`Переменная ${name} уже существует`);
             }
 
@@ -344,7 +345,7 @@ export class Interpretator {
         const sizeExpression = sizeInput.value.trim();
 
         if (!name || !sizeExpression) throw new Error('Поля имени и размера массива не должны быть пустыми');
-        if (name in this.variables) throw new Error(`Переменная ${name} уже существует`);
+        if (name in this.variables && this.callDepth === 0) throw new Error(`Массив ${name} уже существует`);
 
         const size = this.evaluateExpression(sizeExpression);
         this.variables[name] = new Array(size).fill(0);
@@ -368,14 +369,14 @@ export class Interpretator {
     }
 
     callFunction(params, argValues, nested) {
+        this.callDepth++;
+
         const savedVariables = {};
 
         for (const key of Object.keys(this.variables)) {
             savedVariables[key] = Array.isArray(this.variables[key]) 
                 ? [...this.variables[key]] : this.variables[key];
         }
-
-        this.variables = {...savedVariables};
 
         for (let i = 0; i < params.length; i++)  {
             const val = argValues[i] ?? 0;
@@ -390,18 +391,26 @@ export class Interpretator {
             if (e instanceof ReturnException) {
                 returnValue = e.value;
             } else {
+                this.variables = savedVariables;
+                this.callDepth--;
                 throw e;
             }
         }
 
+        const arrayUpdates = {};
         for (const key of Object.keys(this.variables)) {
-            if (key in savedVariables && !params.includes(key)) {
-                savedVariables[key] = Array.isArray(this.variables[key])
-                    ? [...this.variables[key]] : this.variables[key];
+            if (Array.isArray(savedVariables[key]) && Array.isArray(this.variables[key])) {
+                arrayUpdates[key] = [...this.variables[key]];
             }
         }
 
         this.variables = savedVariables;
+
+        for (const key of Object.keys(arrayUpdates)) {
+            this.variables[key] = arrayUpdates[key];
+        }
+
+        this.callDepth--;
         return returnValue;
     }
 
