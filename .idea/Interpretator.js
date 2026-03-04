@@ -9,6 +9,7 @@ export class Interpretator {
 
     currentBlock = null;
     callDepth = 0;
+    kRecursionLimit = 500;
 
     constructor(variables) {
         this.variables = variables;
@@ -369,6 +370,10 @@ export class Interpretator {
     }
 
     callFunction(params, argValues, nested) {
+        if (this.callDepth > this.kRecursionLimit) {
+            throw new Error(`Превышено ограничение глубины рекурсии (max: ${this.kRecursionLimit})`)
+        }
+
         this.callDepth++;
 
         const savedVariables = {};
