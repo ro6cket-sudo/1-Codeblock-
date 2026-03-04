@@ -263,7 +263,7 @@ body.dragging {
 
 .block-nothing {
     width: 100%;
-    min-width: 400px;
+    min-width: 200px !important;
     min-height: 20px;
     background-color: transparent;
     border: 2px dashed transparent;

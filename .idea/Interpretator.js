@@ -368,12 +368,18 @@ export class Interpretator {
     }
 
     callFunction(params, argValues, nested) {
-        const savedVariables = {...this.variables};
+        const savedVariables = {};
+
+        for (const key of Object.keys(this.variables)) {
+            savedVariables[key] = Array.isArray(this.variables[key]) 
+                ? [...this.variables[key]] : this.variables[key];
+        }
 
         this.variables = {...savedVariables};
 
         for (let i = 0; i < params.length; i++)  {
-            this.variables[params[i]] = argValues[i] ?? 0;
+            const val = argValues[i] ?? 0;
+            this.variables[params[i]] = Array.isArray(val) ? [...val] : val;
         }
 
         let returnValue = 0;
@@ -389,8 +395,9 @@ export class Interpretator {
         }
 
         for (const key of Object.keys(this.variables)) {
-            if (!params.includes(key)) {
-                savedVariables[key] = this.variables[key];
+            if (key in savedVariables && !params.includes(key)) {
+                savedVariables[key] = Array.isArray(this.variables[key])
+                    ? [...this.variables[key]] : this.variables[key];
             }
         }
 
