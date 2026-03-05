@@ -26,6 +26,15 @@ export class BinaryOperationNode extends Node {
     }
 }
 
+export class UnaryOperationNode extends Node{
+    constructor(operator, operand){
+        super();
+        this.type = 'UnaryOperation';
+        this.operator = operator;
+        this.operand = operand;
+    }
+}
+
 export class OutputNode extends Node {
     constructor(expression) {
         super();

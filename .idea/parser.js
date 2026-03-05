@@ -1,5 +1,5 @@
 import {Token,TokensTypes} from './tokens.js';
-import { NumberNode, VariableNode, BinaryOperationNode, OutputNode, ArrayAccessNode, ReturnNode, FunctionCallNode, StringNode, BooleanNode, CharNode } from './ast.js'
+import { NumberNode, VariableNode, BinaryOperationNode, OutputNode, ArrayAccessNode, ReturnNode, FunctionCallNode, StringNode, BooleanNode, CharNode, UnaryOperationNode } from './ast.js'
 
 export class Parser {
     tokens = [];
@@ -92,13 +92,27 @@ export class Parser {
     }
 
     parseMultiplication() {
-        let node = this.parseLiteral();
+        let node = this.parseUnaryOperation();
         while (this.currentToken.type === TokensTypes.OPERATION && ['*', '/', '%'].includes(this.currentToken.value)) {let operation = this.currentToken.value;
             let oper = this.currentToken.value;
             this.NextToken();
-            node = new BinaryOperationNode(oper, node, this.parseLiteral());
+            node = new BinaryOperationNode(oper, node, this.parseUnaryOperation());
         }
         return node;
+    }
+
+    parseUnaryOperation(){
+        if (this.currentToken.type === TokensTypes.OPERATION && this.currentToken.value === '-'){
+            this.NextToken();
+            return new UnaryOperationNode('-', this.parseUnaryOperation());
+        }
+
+        if (this.currentToken.type === TokensTypes.NOT){
+            this.NextToken();
+            return new UnaryOperationNode('!', this.parseUnaryOperation());
+        }
+
+        return this.parseLiteral();
     }
 
     parseLiteral() {

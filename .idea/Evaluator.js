@@ -66,6 +66,15 @@ export class Evaluator {
             throw new Error(`Оператор ${node.operator} не поддерживается для строк`)
         }
 
+        if (node.type === 'UnaryOperation'){
+            const operand = this.evaluate(node.operand);
+            const operator = node.operator;
+            if (operator === '-') {return -operand};
+            if (operator === '!') {return operand ? 0 : 1};
+            throw new Error(`Не известный оператор ${operator}`);
+            
+        }
+
         if (node.type === 'ArrayAccess') {
             if (!(node.name in this.variables))
                 throw new Error(`Массив ${node.name} не обнаружен`);
