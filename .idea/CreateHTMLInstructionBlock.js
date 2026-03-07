@@ -59,7 +59,7 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             if (isGhost) block.classList.add('ghost');
         
             block.innerHTML = `
-                <span class="variable-label">variable</span>
+                <span class="variable-label">numeric variable</span>
                 <div class="input-container">
                     <input type="text" class="variable-input">
                 </div>
@@ -71,7 +71,7 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             if (isGhost) block.classList.add('ghost');
 
             block.innerHTML = `
-                <span class="variable-label">variable</span>
+                <span class="variable-label">boolean variable</span>
                 <div class="input-container">
                     <input type="text" class="variable-input">
                 </div>
@@ -83,7 +83,7 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             if (isGhost) block.classList.add('ghost');
 
             block.innerHTML = `
-                <span class="variable-label">variable</span>
+                <span class="variable-label">string variable</span>
                 <div class="input-container">
                     <input type="text" class="variable-input">
                 </div>
