@@ -9,8 +9,14 @@ export class Interpretator {
 
     currentBlock = null;
 
+    stepPermit = null;
+
     constructor(variables) {
         this.variables = variables;
+    }
+
+    async waitStep(){
+        return new Promise(resolve => this.stepPermit = resolve);
     }
 
     evaluateExpression(expression) {
@@ -33,6 +39,61 @@ export class Interpretator {
             }
 
             this.excuteBlock(block)
+        }
+    }
+
+    async executeDebug(container){
+        const blocks = Array.from(container.children).filter(block => block.classList.contains('block'));
+
+        for (let i = 0; i < blocks.length; i++) {
+            const block = blocks[i];
+
+            if (block.dataset.type === 'else'){
+                continue;
+            }
+
+            block.classList.add('debug');
+
+            await this.waitStep();
+
+            await this.executeBlockDebug(block);
+            block.classList.remove('debug');
+        }
+    }
+
+    async executeBlockDebug(block){
+        const blockType = block.dataset.type;
+        try {
+            switch (blockType) {
+                case 'if': {
+                    await this.executeIfDebug(block);
+                    break;
+                }
+                case 'while': {
+                    await this.executeWhileDebug(block);
+                    break;
+                }
+                case 'for': {
+                    await this.executeForDebug(block);
+                    break;
+                }
+                case 'call': {
+                    await this.executeIfDebug(block);
+                    break;
+                }
+                case 'return': {
+                    const input = block.querySelector('.return-input');
+                    const value = this.evaluateExpression(input.value.trim());
+                    throw new ReturnException(value);
+                }
+                default: {
+                    this.excuteBlock(block);
+                }
+            }
+        }
+        catch (error) {
+            block.classList.add('error');
+            throw error;
         }
     }
 
@@ -230,6 +291,32 @@ export class Interpretator {
         }
     }
 
+    async executeIfDebug(block){
+        const input = block.querySelector('.code-input');
+        const string = input.value.trim();
+        if (!string){
+            throw new Error('Блок if не содержит условие');
+        }
+        const value = this.evaluateExpression(string);
+
+        const nasted = block.querySelector('.nested-workspace');
+
+        if (value){
+            if (nasted){
+                await this.executeDebug(nasted);
+            }
+        }
+        else {
+            const next = block.nextElementSibling;
+            if (next && next.dataset.type === "else") {
+                const elseNested = next.querySelector('.nested-workspace');
+                if (elseNested){
+                    await this.executeDebug(elseNested);
+                }
+            }
+        }
+    }
+
     executeAssignmentFromString(str) {
         const trimmed = str.trim();
         if (!trimmed) {
@@ -308,6 +395,38 @@ export class Interpretator {
         while (this.evaluateExpression(cond)) {
             if (nested) {
                 this.executeAll(nested);
+            }
+            this.executeStepExpression(step);
+        }
+
+        if (!hadBefore) {
+            delete this.variables[loopVarName];
+        }
+    }
+
+    async executeForDebug(block) {
+        const initInput = block.querySelector('.for-init');
+        const condInput = block.querySelector('.for-cond');
+        const stepInput = block.querySelector('.for-step');
+
+        const init = initInput?.value.trim();
+        const cond = condInput?.value.trim();
+        const step = stepInput?.value.trim();
+
+        if (!init || !cond || !step) {
+            throw new Error('Все поля в блоке for должны быть заполнены');
+        }
+
+        const loopVarName = this.getForVariableName(init, step);
+        const hadBefore = Object.prototype.hasOwnProperty.call(this.variables, loopVarName);
+
+        this.executeAssignmentFromString(init);
+
+        const nested = block.querySelector('.nested-workspace');
+
+        while (this.evaluateExpression(cond)) {
+            if (nested) {
+                await this.executeDebug(nested);
             }
             this.executeStepExpression(step);
         }
@@ -442,6 +561,30 @@ export class Interpretator {
 
             if (nested) {
                 this.executeAll(nested);
+            }
+        }
+    }
+
+    async executeWhileDebug(block) {
+        const input = block.querySelector('.code-input');
+        const condition = input?.value.trim();
+
+        if (!condition) {
+            throw new Error('Блок while не содержит условие');
+        }
+
+        const nested = block.querySelector('.nested-workspace');
+
+        let iterations = 0;
+        const MAX_ITERATIONS = 100000;
+
+        while (this.evaluateExpression(condition)) {
+            if (iterations++ > MAX_ITERATIONS) {
+                throw new Error('Слишком много итераций в while (возможно, бесконечный цикл)');
+            }
+
+            if (nested) {
+                await this.executeDebug(nested);
             }
         }
     }

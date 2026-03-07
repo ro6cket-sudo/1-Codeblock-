@@ -583,3 +583,9 @@ body.dragging {
     100% {border-color: red;
     }
 }
+
+.debug {
+    border: 3px solid #ffb700;
+    border-color: #ffb700;
+    animation: blink 1s infinite;
+}
