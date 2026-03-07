@@ -100,6 +100,10 @@ body.dragging {
     pointer-events: auto;
 }
 
+.block[data-type="function"] .nested-workspace {
+    border-left: 6px solid #ffb300;
+}
+
 .toolbar{
     background-color: #8cc5b6;
     color: aliceblue;
@@ -357,7 +361,7 @@ body.dragging {
 .block-string .input-container,
 .block-boolean .input-container,
 .block-assignment .input-container,
-.block-output .input-container
+.block-output .input-container,
 .block[data-type="array"] .input-container {
     background-color: #495057;
     padding: 3px;
@@ -394,7 +398,8 @@ body.dragging {
 .block[data-type="if"],
 .block[data-type="else"],
 .block[data-type="while"],
-.block[data-type="for"]{
+.block[data-type="for"],
+.block[data-type="function"] {
     width: fit-content;
     min-width: 0;
     padding-left: 0;
@@ -512,7 +517,8 @@ body.dragging {
 .block[data-type="if"] .condition-header,
 .block[data-type="while"] .condition-header,
 .block[data-type="else"] .condition-header,
-.block[data-type="for"] .condition-header {
+.block[data-type="for"] .condition-header,
+.block[data-type="function"] .condition-header {
     background-color: #8fd3ff; 
     border: 1px solid #3b87c8;
     border-radius: 18px;
