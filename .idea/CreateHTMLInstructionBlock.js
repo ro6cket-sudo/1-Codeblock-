@@ -105,6 +105,14 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             `;
             break;
         }
+
+        case 'tu_number': {
+            block.classList.add('block-convertor');
+            block.innerHTML =  `
+                <span class="tu_number-label">Convert To Number </span>
+                <div class="input-container"><input type="text" class="var-input"></div>`;
+        }
+
         case 'output': {
             block.classList.add('block-output');
             block.innerHTML = `
