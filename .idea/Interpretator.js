@@ -10,6 +10,8 @@ export class Interpretator {
     currentBlock = null;
 
     stepPermit = null;
+    isStopped = false;
+    step = null;
 
     constructor(variables) {
         this.variables = variables;
@@ -46,6 +48,10 @@ export class Interpretator {
         const blocks = Array.from(container.children).filter(block => block.classList.contains('block'));
 
         for (let i = 0; i < blocks.length; i++) {
+            if (this.isStopped){
+                break;
+            }
+
             const block = blocks[i];
 
             if (block.dataset.type === 'else'){
@@ -57,6 +63,11 @@ export class Interpretator {
             await this.waitStep();
 
             await this.executeBlockDebug(block);
+
+            if (this.step){
+                this.step(this.variables);
+            }
+
             block.classList.remove('debug');
         }
     }
@@ -429,6 +440,14 @@ export class Interpretator {
                 await this.executeDebug(nested);
             }
             this.executeStepExpression(step);
+
+            if (this.isStopped){
+                break;
+            }
+
+            block.classList.add('debug');
+            await this.waitStep();
+            block.classList.remove('debug');
         }
 
         if (!hadBefore) {
@@ -586,6 +605,14 @@ export class Interpretator {
             if (nested) {
                 await this.executeDebug(nested);
             }
+
+            if (this.isStopped){
+                break;
+            }
+
+            block.classList.add('debug');
+            await this.waitStep();
+            block.classList.remove('debug');
         }
     }
 }

@@ -589,3 +589,10 @@ body.dragging {
     border-color: #ffb700;
     animation: blink 1s infinite;
 }
+
+.var-states {
+    background: rgba(220, 220, 220, 0.85);
+    border: 6px;
+    padding: 10px;
+    overflow-y: auto;
+}

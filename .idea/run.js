@@ -3,6 +3,24 @@ import { logger } from './ConsoleLogger.js';
 
 let interpretator = null;
 
+function updateVar(variables) {
+    const var_list = document.getElementById('var-list');
+    const var_names = Object.keys(variables);
+
+    if (var_names.length === 0) {
+        var_list.innerHTML = 'Empty';
+        return
+    }
+
+    var_list.innerHTML = var_names.map(name => {
+        let value = variables[name];
+
+
+
+        return `<div class="var">${name}:${value}</div>`
+    }).join('');
+}
+
 async function debug() {
     interpretator = null;
     logger.clear();
@@ -12,10 +30,11 @@ async function debug() {
 
     const globalVariables = {};
     interpretator = new Interpretator(globalVariables);
-
+    interpretator.step = (variables) => {updateVar(variables);};
     try {
         await interpretator.executeDebug(workspace);
         logger.log("Программа завершена.", "success")
+        updateVar(globalVariables);
     }
     catch (error) {
         logger.error(error);
