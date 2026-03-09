@@ -492,6 +492,17 @@ body.dragging {
     flex-grow: 1;
 }
 
+.block-convertor {
+    background-color: #a9cc00;
+    border: 2px solid #627500;
+    border-radius: 15px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 200px;
+}
+
 .block[data-type="array"]{
     background-color: #04cafc;
     border: 1px solid #eb04fc;

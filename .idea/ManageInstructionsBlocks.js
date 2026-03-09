@@ -118,8 +118,13 @@ export function removeBlockWithNestedWorkspace(block) {
 
 function collectVariableNames() {
     const names = new Set();
-    const variableBlocks = document.querySelectorAll('.workspace .block[data-type="variable"]');
+    const selectors = [
+        '.workspace .block[data-type="variable"]',
+        '.workspace .block[data-type="string_variable"]',
+        '.workspace .block[data-type="boolean_variable"]'
+        ];
 
+    const variableBlocks = document.querySelectorAll(selectors.join(','));
     variableBlocks.forEach(block => {
         const input = block.querySelector('.variable-input');
         if (!input) return;
@@ -150,7 +155,7 @@ function updateVariablesDatalist() {
 }
 
 document.addEventListener('focusin', (e) => {
-    if (e.target.matches('.assignment-var-input')) {
+    if (e.target.matches('.assignment-var-input, .convector-var-input')) {
         updateVariablesDatalist();
     }
 });

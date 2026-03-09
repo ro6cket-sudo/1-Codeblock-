@@ -110,7 +110,30 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             block.classList.add('block-convertor');
             block.innerHTML =  `
                 <span class="tu_number-label">Convert To Number </span>
-                <div class="input-container"><input type="text" class="var-input"></div>`;
+                <div class="input-container var-name-frame">
+                    <input type="text" class="variable-input convector-var-input" autocomplete="off" list="variables-list">
+                </div>`;
+            break;
+        }
+
+        case 'tu_string': {
+            block.classList.add('block-convertor');
+            block.innerHTML =  `
+                <span class="tu_number-label">Convert To Number </span>
+                <div class="input-container var-name-frame">
+                    <input type="text" class="variable-input convector-var-input" autocomplete="off" list="variables-list">
+                </div>`;
+            break;
+        }
+
+        case 'tu_boolean': {
+            block.classList.add('block-convertor');
+            block.innerHTML =  `
+                <span class="tu_number-label">Convert To Number </span>
+                <div class="input-container var-name-frame">
+                    <input type="text" class="variable-input convector-var-input" autocomplete="off" list="variables-list">
+                </div>`;
+            break;
         }
 
         case 'output': {

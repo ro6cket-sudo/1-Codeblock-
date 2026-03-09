@@ -177,6 +177,21 @@ export class Interpretator {
                     break;
                 }
 
+                case 'tu_number':{
+                    this.executeTuNumber(block);
+                    break;
+                }
+
+                case 'tu_string':{
+                    this.executeTuString(block);
+                    break;
+                }
+
+                case 'tu_boolean':{
+                    this.executeTuBul(block);
+                    break;
+                }
+
                 default: {
                     throw new Error(`Неизвестный тип блока ${blockType}`);
                 }
@@ -614,6 +629,54 @@ export class Interpretator {
             await this.waitStep();
             block.classList.remove('debug');
         }
+    }
+
+    executeTuNumber(block) {
+        const input = block.querySelector('.convector-var-input');
+        const vari = input.value.trim();
+        if (!vari) {
+            throw new Error('Имя переменной не может быть пустым')
+        }
+        if (!(vari in this.variables)) {
+            throw new Error(`Переменная ${vari} не найдена`)
+        }
+
+        const value = this.variables[vari];
+        const convert  = Number(value);
+        if (isNaN(convert)) {
+            throw new Error('Невозможно преобразовать в число!');
+        }
+        this.variables[vari] = convert;
+    }
+
+    executeTuString(block) {
+        const input = block.querySelector('.convector-var-input');
+        const vari = input.value.trim();
+        if (!vari) {
+            throw new Error('Имя переменной не может быть пустым')
+        }
+        if (!(vari in this.variables)) {
+            throw new Error(`Переменная ${vari} не найдена`)
+        }
+
+        const value = this.variables[vari];
+        const convert  = String(value);
+        this.variables[vari] = convert;
+    }
+
+    executeTuBul(block) {
+        const input = block.querySelector('.convector-var-input');
+        const vari = input.value.trim();
+        if (!vari) {
+            throw new Error('Имя переменной не может быть пустым')
+        }
+        if (!(vari in this.variables)) {
+            throw new Error(`Переменная ${vari} не найдена`)
+        }
+
+        const value = this.variables[vari];
+        const convert  = Boolean(value);
+        this.variables[vari] = convert;
     }
 }
 
