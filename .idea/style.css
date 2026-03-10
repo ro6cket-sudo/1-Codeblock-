@@ -100,6 +100,10 @@ body.dragging {
     pointer-events: auto;
 }
 
+.block[data-type="function"] .nested-workspace {
+    border-left: 6px solid #ffb300;
+}
+
 .toolbar{
     background-color: #8cc5b6;
     color: aliceblue;
@@ -313,7 +317,8 @@ body.dragging {
 .block-string,
 .block-boolean,
 .block-assignment,
-.block-output {
+.block-output,
+.block[data-type="array"] {
     border-radius: 15px;
     padding: 10px 15px;
     display: flex;
@@ -334,13 +339,13 @@ body.dragging {
 }
 
 .block-string{
-    background-color: #d550fd;
-    border: 2px solid #9939b7;
+    background-color: #eebefa;
+    border: 2px solid #c77dd8;
 }
 
 .block-boolean{
-    background-color: #ff00dd;
-    border: 2px solid #bd03a4;
+    background-color: #fcc2d7;
+    border: 2px solid #f9a3c1;
 }
 
 .block-output {
@@ -356,7 +361,8 @@ body.dragging {
 .block-string .input-container,
 .block-boolean .input-container,
 .block-assignment .input-container,
-.block-output .input-container {
+.block-output .input-container,
+.block[data-type="array"] .input-container {
     background-color: #495057;
     padding: 3px;
     border-radius: 8px;
@@ -368,7 +374,8 @@ body.dragging {
 .block-string input,
 .block-boolean input,
 .block-assignment input,
-.block-output input {
+.block-output input,
+.block[data-type="array"] input {
     width: 100%;
     border: none;
     border-radius: 5px;
@@ -391,7 +398,8 @@ body.dragging {
 .block[data-type="if"],
 .block[data-type="else"],
 .block[data-type="while"],
-.block[data-type="for"]{
+.block[data-type="for"],
+.block[data-type="function"] {
     width: fit-content;
     min-width: 0;
     padding-left: 0;
@@ -504,8 +512,8 @@ body.dragging {
 }
 
 .block[data-type="array"]{
-    background-color: #04cafc;
-    border: 1px solid #eb04fc;
+    background-color: #99e9f2;
+    border: 1px solid #81dce8;
 }
 
 .block[data-type="input"]{
@@ -520,7 +528,8 @@ body.dragging {
 .block[data-type="if"] .condition-header,
 .block[data-type="while"] .condition-header,
 .block[data-type="else"] .condition-header,
-.block[data-type="for"] .condition-header {
+.block[data-type="for"] .condition-header,
+.block[data-type="function"] .condition-header {
     background-color: #8fd3ff; 
     border: 1px solid #3b87c8;
     border-radius: 18px;
