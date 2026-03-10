@@ -108,8 +108,10 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
 
         case 'tu_number': {
             block.classList.add('block-convertor');
+            block.style.backgroundColor = '#b2f2bb';
+            block.style.borderColor = "#51cf66";
             block.innerHTML =  `
-                <span class="tu_number-label">Convert To Number </span>
+                <span class="tu_number-label">Convert To Number</span>
                 <div class="input-container var-name-frame">
                     <input type="text" class="variable-input convector-var-input" autocomplete="off" list="variables-list">
                 </div>`;
@@ -118,8 +120,10 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
 
         case 'tu_string': {
             block.classList.add('block-convertor');
+            block.style.backgroundColor = '#d550fd';
+            block.style.borderColor = "#9939b7";
             block.innerHTML =  `
-                <span class="tu_number-label">Convert To Number </span>
+                <span class="tu_number-label">Convert To String </span>
                 <div class="input-container var-name-frame">
                     <input type="text" class="variable-input convector-var-input" autocomplete="off" list="variables-list">
                 </div>`;
@@ -128,8 +132,10 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
 
         case 'tu_boolean': {
             block.classList.add('block-convertor');
+            block.style.backgroundColor = '#ff00dd';
+            block.style.borderColor = "#bd03a4";
             block.innerHTML =  `
-                <span class="tu_number-label">Convert To Number </span>
+                <span class="tu_number-label">Convert To Bool</span>
                 <div class="input-container var-name-frame">
                     <input type="text" class="variable-input convector-var-input" autocomplete="off" list="variables-list">
                 </div>`;

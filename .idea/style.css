@@ -606,4 +606,9 @@ body.dragging {
     border: 6px;
     padding: 10px;
     overflow-y: auto;
+    display: none;
+}
+
+.var-states.visible {
+    display: block;
 }

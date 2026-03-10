@@ -22,6 +22,7 @@ function updateVar(variables) {
 }
 
 async function debug() {
+    showVariablesPanel();
     interpretator = null;
     logger.clear();
     logger.log("Отладка запущена. Нажмите кнопку 'Следующий шаг ", "success");
@@ -55,6 +56,7 @@ function NextStep() {
 }
 
 function runProgram() {
+    hideVariablesPanel();
     interpretator = null;
     logger.clear();
     logger.log("Запуск программы...", "success");
@@ -112,6 +114,20 @@ function runProgram() {
     // interpretator.executeAll(workspace);
     //
     // logger.log("Программа завершена.", "success");
+}
+
+function showVariablesPanel() {
+    const varStates = document.querySelector('.var-states');
+    if (varStates) {
+        varStates.classList.add('visible');
+    }
+}
+
+function hideVariablesPanel() {
+    const varStates = document.querySelector('.var-states');
+    if (varStates) {
+        varStates.classList.remove('visible');
+    }
 }
 
 document.getElementById('run-btn').addEventListener('click', runProgram);
