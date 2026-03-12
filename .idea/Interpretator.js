@@ -192,6 +192,21 @@ export class Interpretator {
                     break;
                 }
 
+                case 'round':{
+                    this.executeRound(block);
+                    break;
+                }
+
+                case 'floor':{
+                    this.executeFloor(block);
+                    break;
+                }
+
+                case 'ceil':{
+                    this.executeCeil(block);
+                    break;
+                }
+
                 default: {
                     throw new Error(`Неизвестный тип блока ${blockType}`);
                 }
@@ -677,6 +692,63 @@ export class Interpretator {
         const value = this.variables[vari];
         const convert  = Boolean(value);
         this.variables[vari] = convert;
+    }
+
+    executeRound(block) {
+        const input = block.querySelector('.round-var-input');
+        const vari = input.value.trim();
+        if (!vari) {
+            throw new Error('Имя переменной не может быть пустым')
+        }
+        if (!(vari in this.variables)) {
+            throw new Error(`Переменная ${vari} не найдена`)
+        }
+
+        const value = this.variables[vari];
+        if (Number.isFinite(value)) {
+            this.variables[vari] = Math.round(value);
+        }
+        else{
+            throw new Error(`Переменная ${vari} не является числом!`)
+        }
+    }
+
+    executeFloor(block) {
+        const input = block.querySelector('.floor-var-input');
+        const vari = input.value.trim();
+        if (!vari) {
+            throw new Error('Имя переменной не может быть пустым')
+        }
+        if (!(vari in this.variables)) {
+            throw new Error(`Переменная ${vari} не найдена`)
+        }
+
+        const value = this.variables[vari];
+        if (Number.isFinite(value)) {
+            this.variables[vari] = Math.floor(value);
+        }
+        else{
+            throw new Error(`Переменная ${vari} не является числом!`)
+        }
+    }
+
+    executeCeil(block) {
+        const input = block.querySelector('.ceil-var-input');
+        const vari = input.value.trim();
+        if (!vari) {
+            throw new Error('Имя переменной не может быть пустым')
+        }
+        if (!(vari in this.variables)) {
+            throw new Error(`Переменная ${vari} не найдена`)
+        }
+
+        const value = this.variables[vari];
+        if (Number.isFinite(value)) {
+            this.variables[vari] = Math.ceil(value);
+        }
+        else{
+            throw new Error(`Переменная ${vari} не является числом!`)
+        }
     }
 }
 

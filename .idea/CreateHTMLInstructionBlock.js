@@ -106,6 +106,42 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             break;
         }
 
+        case 'floor': {
+            block.classList.add('block-floor');
+            block.style.backgroundColor = '#ffffff';
+            block.style.borderColor = "#7e807e";
+            block.innerHTML =  `
+                <span class="floor-label">Floor</span>
+                <div class="input-container var-name-frame">
+                    <input type="text" class="variable-input floor-var-input" autocomplete="off" list="variables-list">
+                </div>`;
+            break;
+        }
+
+        case 'ceil': {
+            block.classList.add('block-ceil');
+            block.style.backgroundColor = '#ffffff';
+            block.style.borderColor = "#7e807e";
+            block.innerHTML =  `
+                <span class="ceil-label">Ceil</span>
+                <div class="input-container var-name-frame">
+                    <input type="text" class="variable-input ceil-var-input" autocomplete="off" list="variables-list">
+                </div>`;
+            break;
+        }
+
+        case 'round': {
+            block.classList.add('block-round');
+            block.style.backgroundColor = '#ffffff';
+            block.style.borderColor = "#7e807e";
+            block.innerHTML =  `
+                <span class="round-label">Round</span>
+                <div class="input-container var-name-frame">
+                    <input type="text" class="variable-input round-var-input" autocomplete="off" list="variables-list">
+                </div>`;
+            break;
+        }
+
         case 'tu_number': {
             block.classList.add('block-convertor');
             block.style.backgroundColor = '#b2f2bb';

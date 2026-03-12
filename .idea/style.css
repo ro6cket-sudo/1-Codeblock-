@@ -592,10 +592,10 @@ body.dragging {
 .block.error {
     border: 3px solid red;
     border-color: #ff0000;
-    animation: blink 1s infinite;
+    animation: blink-error 1s infinite;
 }
 
-@keyframes blink {
+@keyframes blink-error {
     0% {border-color: #ce0000;
     }
     50% {border-color: #ff0043;
@@ -607,7 +607,16 @@ body.dragging {
 .debug {
     border: 3px solid #ffb700;
     border-color: #ffb700;
-    animation: blink 1s infinite;
+    animation: blink-debug 1s infinite;
+}
+
+@keyframes blink-debug {
+    0% {border-color: #fd7f00;
+    }
+    50% {border-color: #ffb802;
+    }
+    100% {border-color: #ffb802;
+    }
 }
 
 .var-states {
