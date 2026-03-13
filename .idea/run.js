@@ -1,4 +1,4 @@
-import { Interpretator } from './interpretator.js';
+import { Interpretator } from './Interpretator.js';
 import { logger } from './ConsoleLogger.js';
 
 let interpretator = null;
@@ -22,8 +22,18 @@ function updateVar(variables) {
 }
 
 async function debug() {
+    if (interpretator) {
+        interpretator.isStopped = true;
+        if (interpretator.stepPermit) {
+            interpretator.stepPermit();
+        }
+        interpretator = null;
+        await new Promise(r => setTimeout(r, 50));
+        document.querySelectorAll('.debug').forEach(b => b.classList.remove('debug'));
+        return;
+    }
+
     showVariablesPanel();
-    interpretator = null;
     logger.clear();
     logger.log("Отладка запущена. Нажмите кнопку 'Следующий шаг ", "success");
     const workspace = document.querySelector('.workspace');
@@ -31,11 +41,11 @@ async function debug() {
 
     const globalVariables = {};
     interpretator = new Interpretator(globalVariables);
-    interpretator.step = (variables) => {updateVar(variables);};
+    interpretator.step = (variables) => { updateVar(variables); };
     try {
         await interpretator.executeDebug(workspace);
         logger.log("Программа завершена.", "success")
-        updateVar(globalVariables);
+        updateVar(interpretator?.variables ?? {});
     }
     catch (error) {
         logger.error(error);
@@ -56,8 +66,15 @@ function NextStep() {
 }
 
 function runProgram() {
+    if (interpretator) {
+        interpretator.isStopped = true;
+        if (interpretator.stepPermit) {
+            interpretator.stepPermit();
+        }
+        interpretator = null;
+    }
+
     hideVariablesPanel();
-    interpretator = null;
     logger.clear();
     logger.log("Запуск программы...", "success");
     // const blocks = document.querySelectorAll('.workspace .block');

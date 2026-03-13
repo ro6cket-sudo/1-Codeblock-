@@ -115,7 +115,7 @@ function getDragAfterElement(container, y) {
         if (!isContainerInsideFunction(container)) {
             return null;
         }
-    } else if (currentType === 'functon') {
+    } else if (currentType === 'function') {
         if (container.classList.contains('nested-workspace')) {
             return null;
         }

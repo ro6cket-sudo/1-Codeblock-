@@ -160,7 +160,7 @@ function updateVariablesDatalist() {
 
 document.addEventListener('focusin', (e) => {
     if (e.target.matches('.assignment-var-input, .convector-var-input, ' +
-        '.round-var-input, .floor-var-input, .ceil-var-input, .slice-target, slice-result')) {
+        '.round-var-input, .floor-var-input, .ceil-var-input, .slice-target, .slice-result')) {
         updateVariablesDatalist();
     }
 });

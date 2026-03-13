@@ -193,7 +193,7 @@ export class Parser {
     parseOutput() {
         this.NextToken();
     
-        const expression = this.parseExpression();
+        const expression = this.parseOR();
     
         return new OutputNode(expression);
     }

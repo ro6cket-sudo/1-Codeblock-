@@ -13,6 +13,7 @@ class ReturnException {
 export class Interpretator {
     variables = {};
     functions = {};
+    functionsNested = {};
 
     currentBlock = null;
     callDepth = 0;
@@ -63,13 +64,19 @@ export class Interpretator {
 
             const block = blocks[i];
 
-            if (block.dataset.type === 'else'){
+            if (block.dataset.type === 'else' || block.dataset.type === 'nothing') {
                 continue;
             }
-
-            block.classList.add('debug');
-
+            
+            const debugTarget = block.querySelector('.block-header') ?? block;
+            debugTarget.classList.add('debug');
+            block.scrollIntoView({ behavior: 'smooth', block: 'center' });
             await this.waitStep();
+
+            if (this.isStopped) {
+                debugTarget.classList.remove('debug');
+                break;
+            }
 
             await this.executeBlockDebug(block);
 
@@ -77,8 +84,82 @@ export class Interpretator {
                 this.step(this.variables);
             }
 
-            block.classList.remove('debug');
+            debugTarget.classList.remove('debug');
         }
+    }
+
+    async executeCallDebug(block) {
+        const input = block.querySelector('.call-input');
+        const callString = input.value.trim();
+
+        if (!callString) {
+            throw new Error('Пустая строка вызова функции');
+        }
+
+        const match = callString.match(/^([a-zA-Z0-9_]*)\s*\((.*)\)$/);
+        if (!match) {
+            throw new Error('Некорректный ввод функции');
+        }
+
+        const funcName = match[1];
+        const argsString = match[2];
+        const args = argsString ? splitArgs(argsString).map(s => this.evaluateExpression(s.trim())) : [];
+
+        if (!(funcName in this.functions)) {
+            throw new Error(`Функция ${funcName} не найдена`);
+        }
+
+        await this.callFunctionDebug(this.functionsNested[funcName].params, args, this.functionsNested[funcName].nested);
+    }
+
+    async callFunctionDebug(params, argValues, nested) {
+        if (this.callDepth > this.kRecursionLimit) {
+            throw new Error(`Превышено ограничение глубины (max: ${this.kRecursionLimit})`);
+        }
+
+        this.callDepth++;
+
+        const savedVariables = {};
+        for (const key of Object.keys(this.variables)) {
+            savedVariables[key] = Array.isArray(this.variables[key])
+                ? [...this.variables[key]] : this.variables[key];
+        }
+
+        for (let i = 0; i < params.length; i++) {
+            const val = argValues[i] ?? 0;
+            this.variables[params[i]] = Array.isArray(val) ? [...val] : val;
+        }
+
+        let returnValue = 0;
+
+        try {
+            await this.executeDebug(nested);
+        } catch (e) {
+            if (e instanceof ReturnException) {
+                returnValue = e.value;
+            } else {
+                Object.keys(this.variables).forEach(k => delete this.variables[k]);
+                Object.assign(this.variables, savedVariables);
+                this.callDepth--;
+                throw e;
+            }
+        }
+
+        const arrayUpdates = {};
+        for (const key of Object.keys(this.variables)) {
+            if (Array.isArray(savedVariables[key]) && Array.isArray(this.variables[key])) {
+                arrayUpdates[key] = [...this.variables[key]];
+            }
+        }
+
+        Object.keys(this.variables).forEach(k => delete this.variables[k]);
+        Object.assign(this.variables, savedVariables);
+        for (const key of Object.keys(arrayUpdates)) {
+            this.variables[key] = arrayUpdates[key];
+        }
+
+        this.callDepth--;
+        return returnValue;
     }
 
     async executeBlockDebug(block){
@@ -98,7 +179,7 @@ export class Interpretator {
                     break;
                 }
                 case 'call': {
-                    await this.executeIfDebug(block);
+                    await this.executeCallDebug(block);
                     break;
                 }
                 case 'return': {
@@ -112,7 +193,9 @@ export class Interpretator {
             }
         }
         catch (error) {
-            block.classList.add('error');
+            if (!(error instanceof ReturnException)) {
+                block.classList.add('error');
+            }
             throw error;
         }
     }
@@ -500,10 +583,13 @@ export class Interpretator {
             if (this.isStopped){
                 break;
             }
-
-            block.classList.add('debug');
+            const debugTarget = block.querySelector('.block-header') ?? block;
+            debugTarget.classList.add('debug');
             await this.waitStep();
-            block.classList.remove('debug');
+            debugTarget.classList.remove('debug');
+            if (this.isStopped) {
+                break;
+            }
         }
 
         if (!hadBefore) {
@@ -556,6 +642,7 @@ export class Interpretator {
         if (name in this.functions) throw new Error(`Функция ${name} уже существует`);
 
         const nested = block.querySelector('.nested-workspace');
+        this.functionsNested[name] = { params, nested };
         this.functions[name] = (args) => {
             return this.callFunction(params, args, nested);
         };
@@ -588,7 +675,8 @@ export class Interpretator {
             if (e instanceof ReturnException) {
                 returnValue = e.value;
             } else {
-                this.variables = savedVariables;
+                Object.keys(this.variables).forEach(k => delete this.variables[k]);
+                Object.assign(this.variables, savedVariables);
                 this.callDepth--;
                 throw e;
             }
@@ -601,7 +689,8 @@ export class Interpretator {
             }
         }
 
-        this.variables = savedVariables;
+        Object.keys(this.variables).forEach(k => delete this.variables[k]);
+        Object.assign(this.variables, savedVariables);
 
         for (const key of Object.keys(arrayUpdates)) {
             this.variables[key] = arrayUpdates[key];
@@ -684,10 +773,14 @@ export class Interpretator {
             if (this.isStopped){
                 break;
             }
-
-            block.classList.add('debug');
+            
+            const debugTarget = block.querySelector('.block-header') ?? block;
+            debugTarget.classList.add('debug');
             await this.waitStep();
-            block.classList.remove('debug');
+            debugTarget.classList.remove('debug');
+            if (this.isStopped) {
+                break;
+            }
         }
     }
 
@@ -812,7 +905,7 @@ export class Interpretator {
         }
 
         if (!(targetName in this.variables)) {
-            throw new Error(`Начальная переменная ${targetInput} не найдена`);
+            throw new Error(`Начальная переменная ${targetName} не найдена`);
         }
 
         if (!(rusltName in this.variables)) {

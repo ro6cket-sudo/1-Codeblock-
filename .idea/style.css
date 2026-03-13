@@ -656,17 +656,17 @@ body.dragging {
 }
 
 .debug {
-    border: 3px solid #ffb700;
-    border-color: #ffb700;
+    outline: 3px solid #ffb700;
+    outline-offset: 2px;
     animation: blink-debug 1s infinite;
 }
 
 @keyframes blink-debug {
-    0% {border-color: #fd7f00;
+    0% {outline-color: #ff0000;
     }
-    50% {border-color: #ffb802;
+    50% {outline-color: #ff5e00;
     }
-    100% {border-color: #ffb802;
+    100% {outline-color: #ff9102;
     }
 }
 
