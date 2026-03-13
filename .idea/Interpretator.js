@@ -216,6 +216,11 @@ export class Interpretator {
                     break;
                 }
 
+                case 'slice': {
+                    this.executeSlice(block);
+                    break;
+                }
+
                 default: {
                     throw new Error(`Неизвестный тип блока ${blockType}`);
                 }
@@ -779,6 +784,42 @@ export class Interpretator {
         else{
             throw new Error(`Переменная ${vari} не является числом!`)
         }
+    }
+
+    executeSlice(block) {
+        const targetInput = block.querySelector('.slice-target');
+        const startInput = block.querySelector('.slice-start-index');
+        const finishInput = block.querySelector('.slice-finish-index');
+        const varInput = block.querySelector('.slice-result');
+
+        const targetName = targetInput.value.trim();
+        const startExpression = startInput.value.trim();
+        const endExpression = finishInput.value.trim();
+        const rusltName = varInput.value.trim();
+
+        if (!targetName || !rusltName) {
+            throw new Error('Укажите имена начальной переменной и  переменной для результата')
+        }
+
+        if (!(targetName in this.variables)) {
+            throw new Error(`Начальная переменная ${targetInput} не найдена`);
+        }
+
+        if (!(rusltName in this.variables)) {
+            throw new Error(`Переменная для результата ${varInput} не найдена`);
+        }
+
+        const tartgetValue = this.variables[targetName];
+
+        if (typeof tartgetValue !== 'string' && !Array.isArray(tartgetValue)) {
+            throw new Error(`Переменная ${targetInput} не является ни строкой, ни массивом`)
+        }
+
+        const start = startExpression ? this.evaluateExpression(startExpression) : undefined;
+        const finish = endExpression ? this.evaluateExpression(endExpression) : undefined;
+        const result = tartgetValue.slice(start, finish);
+
+        this.variables[rusltName] = result;
     }
 }
 
