@@ -23,7 +23,6 @@ export const tokenRules = [
     {type: TokensTypes.BOOLEAN, regex: /^(true|flase)\b/},
     {type: TokensTypes.NUMBER, regex: /^\d+(\.\d+)?/},
     {type: TokensTypes.STRING, regex: /^".*?"/},
-    // {type: TokensTypes.CHAR, regex: /^'[A-Za-z0-9]+$?'/},
     {type: TokensTypes.OUTPUT, regex: /^output\b/},
     {type: TokensTypes.RETURN, regex: /^return\b/},
     {type: TokensTypes.OR, regex: /^or\b/},

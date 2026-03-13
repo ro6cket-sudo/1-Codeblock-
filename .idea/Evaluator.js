@@ -151,9 +151,6 @@ export class Evaluator {
         }
     }
 
-    // evaluateChar (operator, left, right) {
-    // }
-
     evaluateBoolean (operator, left, right) {
         switch (operator) {
             case 'and': return left && right;
