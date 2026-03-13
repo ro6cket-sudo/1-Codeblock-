@@ -60,8 +60,8 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
         
             block.innerHTML = `
                 <span class="variable-label">numeric variable</span>
-                <div class="input-container">
-                    <input type="text" class="variable-input">
+                <div class="input-container input-container-base">
+                    <input type="text" class="variable-input input-base">
                 </div>
             `;
             break;
@@ -72,8 +72,8 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
 
             block.innerHTML = `
                 <span class="variable-label">boolean variable</span>
-                <div class="input-container">
-                    <input type="text" class="variable-input">
+                <div class="input-container input-container-base">
+                    <input type="text" class="variable-input input-base">
                 </div>
             `;
             break;
@@ -84,8 +84,8 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
 
             block.innerHTML = `
                 <span class="variable-label">string variable</span>
-                <div class="input-container">
-                    <input type="text" class="variable-input">
+                <div class="input-container input-container-base">
+                    <input type="text" class="variable-input input-base">
                 </div>
             `;
             break;
@@ -96,11 +96,11 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
         
             block.innerHTML = `
                 <span class="assignment-label">assignment</span>
-                <div class="input-container var-name-frame">
-                    <input type="text" class="variable-input assignment-var-input" autocomplete="off" list="variables-list">
+                <div class="input-container var-name-frame input-container-base">
+                    <input type="text" class="variable-input assignment-var-input input-base" autocomplete="off" list="variables-list">
                 </div>
-                <div class="input-container var-value-frame">
-                    <input type="text" class="variable-input">
+                <div class="input-container var-value-frame input-container-base">
+                    <input type="text" class="variable-input input-base">
                 </div>
             `;
             break;
@@ -108,44 +108,36 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
 
         case 'floor': {
             block.classList.add('block-floor');
-            block.style.backgroundColor = '#ffffff';
-            block.style.borderColor = "#7e807e";
             block.innerHTML =  `
                 <span class="floor-label">Floor</span>
-                <div class="input-container var-name-frame">
-                    <input type="text" class="variable-input floor-var-input" autocomplete="off" list="variables-list">
+                <div class="input-container var-name-frame input-container-base">
+                    <input type="text" class="variable-input floor-var-input input-base" autocomplete="off" list="variables-list">
                 </div>`;
             break;
         }
 
         case 'ceil': {
             block.classList.add('block-ceil');
-            block.style.backgroundColor = '#ffffff';
-            block.style.borderColor = "#7e807e";
             block.innerHTML =  `
                 <span class="ceil-label">Ceil</span>
-                <div class="input-container var-name-frame">
-                    <input type="text" class="variable-input ceil-var-input" autocomplete="off" list="variables-list">
+                <div class="input-container var-name-frame input-container-base">
+                    <input type="text" class="variable-input ceil-var-input input-base" autocomplete="off" list="variables-list">
                 </div>`;
             break;
         }
 
         case 'round': {
             block.classList.add('block-round');
-            block.style.backgroundColor = '#ffffff';
-            block.style.borderColor = "#7e807e";
             block.innerHTML =  `
                 <span class="round-label">Round</span>
-                <div class="input-container var-name-frame">
-                    <input type="text" class="variable-input round-var-input" autocomplete="off" list="variables-list">
+                <div class="input-container var-name-frame input-container-base">
+                    <input type="text" class="variable-input round-var-input input-base" autocomplete="off" list="variables-list">
                 </div>`;
             break;
         }
 
         case 'tu_number': {
-            block.classList.add('block-convertor');
-            block.style.backgroundColor = '#b2f2bb';
-            block.style.borderColor = "#51cf66";
+            block.classList.add('block-convertor','type-number');
             block.innerHTML =  `
                 <span class="tu_number-label">Convert To Number</span>
                 <div class="input-container var-name-frame">
@@ -155,9 +147,7 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
         }
 
         case 'tu_string': {
-            block.classList.add('block-convertor');
-            block.style.backgroundColor = '#d550fd';
-            block.style.borderColor = "#9939b7";
+            block.classList.add('block-convertor','type-string');
             block.innerHTML =  `
                 <span class="tu_number-label">Convert To String </span>
                 <div class="input-container var-name-frame">
@@ -167,9 +157,7 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
         }
 
         case 'tu_boolean': {
-            block.classList.add('block-convertor');
-            block.style.backgroundColor = '#ff00dd';
-            block.style.borderColor = "#bd03a4";
+            block.classList.add('block-convertor','type-boolean');
             block.innerHTML =  `
                 <span class="tu_number-label">Convert To Bool</span>
                 <div class="input-container var-name-frame">
@@ -182,8 +170,8 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             block.classList.add('block-output');
             block.innerHTML = `
                 <span class="label">output</span>
-                <div class="input-container"> 
-                    <input type="text" class="output-input">
+                <div class="input-container input-container-base"> 
+                    <input type="text" class="output-input input-base">
                 </div>
             `;
             break;
@@ -192,11 +180,11 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             block.classList.add('block-array');
             block.innerHTML = `
                 <span class="label">array</span>
-                <div class="input-container">
-                    <input type="text" class="array-name-input" placeholder="имя">
+                <div class="input-container input-container-base">
+                    <input type="text" class="array-name-input input-base" placeholder="имя">
                 </div>
-                <div class="input-container">
-                    <input type="text" class="array-size-input" placeholder="размер">
+                <div class="input-container input-container-base">
+                    <input type="text" class="array-size-input input-base" placeholder="размер">
                 </div>
             `;
             break;
@@ -207,16 +195,16 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             break;
         }
         case 'function': {
-            block.classList.add('container-block');
+            block.classList.add('container-block','block-function');
             block.innerHTML = `
-                <div class="block-header condition-header" style="background-color: #ff9800; border-color: #e65100;">
+                <div class="block-header condition-header function-header">
                     <h4 class="blockName">function</h4>
                     <input class="function-name-input" placeholder="имя">
                     <input class="function-params-input" placeholder="параметры через запятую">
                 </div>
                 ${!isGhost ? 
-                    '<div class="nested-workspace"></div>' +
-                    '<div class="block-footer" style="background-color: #ff9800"></div>' : ''}
+                    '<div class="nested-workspace function-nested-workspace"></div>' +
+                    '<div class="block-footer function-footer"></div>' : ''}
             `;
             break;
         }

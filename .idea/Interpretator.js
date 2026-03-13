@@ -3,11 +3,20 @@ import { Parser } from './parser.js';
 import { logger } from './ConsoleLogger.js';
 import { Evaluator } from './Evaluator.js';
 
+
+class ReturnException {
+    constructor(value) {
+        this.value = value;
+    }
+}
+
 export class Interpretator {
     variables = {};
     functions = {};
 
     currentBlock = null;
+    callDepth = 0;
+    kRecursionLimit = 500;
 
     stepPermit = null;
     isStopped = false;
@@ -227,7 +236,9 @@ export class Interpretator {
                 }
             }
         } catch (error) {
-            block.classList.add('error');
+            if (!(error instanceof ReturnException)) {
+                block.classList.add('error');
+            }
             throw error;
         }
     }
@@ -242,7 +253,7 @@ export class Interpretator {
         const names = string.split(',').map(s => s.trim()).filter(s => s.length > 0);
 
         for (const name of names){
-            if (name in this.variables) {
+            if (name in this.variables && this.callDepth === 0) {
                 throw new Error(`Переменная ${name} уже существует`);
             }
 
@@ -260,7 +271,7 @@ export class Interpretator {
         const names = string.split(',').map(s => s.trim()).filter(s => s.length > 0);
 
         for (const name of names){
-            if (name in this.variables) {
+            if (name in this.variables && this.callDepth === 0) {
                 throw new Error(`Переменная ${name} уже существует`);
             }
 
@@ -278,7 +289,7 @@ export class Interpretator {
         const names = string.split(',').map(s => s.trim()).filter(s => s.length > 0);
 
         for (const name of names){
-            if (name in this.variables) {
+            if (name in this.variables && this.callDepth === 0) {
                 throw new Error(`Переменная ${name} уже существует`);
             }
 
@@ -527,7 +538,7 @@ export class Interpretator {
         const sizeExpression = sizeInput.value.trim();
 
         if (!name || !sizeExpression) throw new Error('Поля имени и размера массива не должны быть пустыми');
-        if (name in this.variables) throw new Error(`Переменная ${name} уже существует`);
+        if (name in this.variables && this.callDepth === 0) throw new Error(`Массив ${name} уже существует`);
 
         const size = this.evaluateExpression(sizeExpression);
         this.variables[name] = new Array(size).fill(0);
@@ -551,12 +562,22 @@ export class Interpretator {
     }
 
     callFunction(params, argValues, nested) {
-        const savedVariables = {...this.variables};
+        if (this.callDepth > this.kRecursionLimit) {
+            throw new Error(`Превышено ограничение глубины рекурсии (max: ${this.kRecursionLimit})`)
+        }
 
-        this.variables = {...savedVariables};
+        this.callDepth++;
+
+        const savedVariables = {};
+
+        for (const key of Object.keys(this.variables)) {
+            savedVariables[key] = Array.isArray(this.variables[key]) 
+                ? [...this.variables[key]] : this.variables[key];
+        }
 
         for (let i = 0; i < params.length; i++)  {
-            this.variables[params[i]] = argValues[i] ?? 0;
+            const val = argValues[i] ?? 0;
+            this.variables[params[i]] = Array.isArray(val) ? [...val] : val;
         }
 
         let returnValue = 0;
@@ -567,17 +588,26 @@ export class Interpretator {
             if (e instanceof ReturnException) {
                 returnValue = e.value;
             } else {
+                this.variables = savedVariables;
+                this.callDepth--;
                 throw e;
             }
         }
 
+        const arrayUpdates = {};
         for (const key of Object.keys(this.variables)) {
-            if (!params.includes(key)) {
-                savedVariables[key] = this.variables[key];
+            if (Array.isArray(savedVariables[key]) && Array.isArray(this.variables[key])) {
+                arrayUpdates[key] = [...this.variables[key]];
             }
         }
 
         this.variables = savedVariables;
+
+        for (const key of Object.keys(arrayUpdates)) {
+            this.variables[key] = arrayUpdates[key];
+        }
+
+        this.callDepth--;
         return returnValue;
     }
 
@@ -596,7 +626,7 @@ export class Interpretator {
 
         const funcName = match[1];
         const argsString = match[2];
-        const args = argsString ? argsString.split(',').map(s => this.evaluateExpression(s.trim())) : [];
+        const args = argsString ? splitArgs(argsString).map(s => this.evaluateExpression(s.trim())) : [];
 
         if (!(funcName in this.functions)) {
             throw new Error(`Функция ${funcName} не найдена`);
@@ -837,8 +867,22 @@ export class Interpretator {
     }
 }
 
-class ReturnException {
-    constructor(value) {
-        this.value = value;
+function splitArgs(str) {
+    const args = [];
+    let depth = 0;
+    let start = 0;
+
+    for (let i = 0; i < str.length; i++) {
+        if (str[i] === '(') depth++;
+        else if (str[i] === ')') depth--;
+        else if (str[i] === ',' && depth === 0) {
+            args.push(str.slice(start, i).trim());
+            start = i + 1;
+        }
     }
+
+    const last = str.slice(start).trim();
+    if (last) args.push(last);
+
+    return args;
 }

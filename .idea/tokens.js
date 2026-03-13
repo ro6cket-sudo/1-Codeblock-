@@ -26,14 +26,11 @@ export const tokenRules = [
     // {type: TokensTypes.CHAR, regex: /^'[A-Za-z0-9]+$?'/},
     {type: TokensTypes.OUTPUT, regex: /^output\b/},
     {type: TokensTypes.RETURN, regex: /^return\b/},
-
     {type: TokensTypes.OR, regex: /^or\b/},
     {type: TokensTypes.AND, regex: /^and\b/},
-
     {type: TokensTypes.VARIABLE, regex: /^[A-Za-z_][A-Za-z0-9_]*/},
-    {type: TokensTypes.OPERATION, regex: /^[+\-*/%]/},
+    {type: TokensTypes.OPERATION, regex: /^(\/\/|[+\-*/%])/},
     {type: TokensTypes.COMPARE, regex: /(^>=|<=|==|!=|>|<)/},
-
     {type: TokensTypes.NOT, regex: /^!/},
     {type: TokensTypes.OPENPARENTHIST, regex: /^\(/},
     {type: TokensTypes.CLOSEPARENTHIST, regex: /^\)/},

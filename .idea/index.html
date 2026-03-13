@@ -8,7 +8,7 @@
 <body>
     <div class="codeblock">
 
-        <div class="toolbar">
+        <header class="toolbar">
             <button type="button" id="run-btn">Запустить</button>
             <button type="button" id="debug-button">Отладка</button>
             <button type="button" id="step-button">Следующий шаг</button>
@@ -16,60 +16,59 @@
             <div id ="trash-bin" class="trash-button">🗑️</div>
             <button type="button" id="preset-bubble-sort">Пузырек</button>
             <button type="button" id="preset-gcd">НОД Евклид</button>
-        </div>
+        </header>
 
-        <div class="editor">
+        <section class="editor">
             <div class="instruction_set">
                 <h2>Блоки</h2>
-                <div class="instructions">
+                <ul class="instructions">
 
-                    <button class="instruction" data-block-type="variable" type="button">Создать Числовую Переменную</button>
+                    <li><button class="instruction" data-block-type="variable" type="button">Создать Числовую Переменную</button></li>
 
-                    <button class="instruction" data-block-type="string_variable" type="button">Создать Строковую Переменную</button>
+                    <li><button class="instruction" data-block-type="string_variable" type="button">Создать Строковую Переменную</button></li>
 
-                    <button class="instruction" data-block-type="boolean_variable" type="button">Создать Булевую Переменную</button>
+                    <li><button class="instruction" data-block-type="boolean_variable" type="button">Создать Булевую Переменную</button></li>
 
-                    <button class="instruction" data-block-type="assignment" type="button">Присваивание</button>
+                    <li><button class="instruction" data-block-type="assignment" type="button">Присваивание</button></li>
 
-                    <button class="instruction" data-block-type="floor" type="button">Округление Вниз</button>
+                    <li><button class="instruction" data-block-type="floor" type="button">Округление Вниз</button></li>
 
-                    <button class="instruction" data-block-type="ceil" type="button">Округление Вверх</button>
+                    <li><button class="instruction" data-block-type="ceil" type="button">Округление Вверх</button></li>
 
-                    <button class="instruction" data-block-type="round" type="button">Округление</button>
+                    <li><button class="instruction" data-block-type="round" type="button">Округление</button></li>
 
-                    <button class="instruction" data-block-type="tu_number" type="button">В число</button>
+                    <li><button class="instruction" data-block-type="tu_number" type="button">Конвентор В число</button></li>
 
-                    <button class="instruction" data-block-type="tu_string" type="button">В строку</button>
+                    <li><button class="instruction" data-block-type="tu_string" type="button">Конвентор В строку</button></li>
 
-                    <button class="instruction" data-block-type="tu_boolean" type="button">В бул</button>
+                    <li><button class="instruction" data-block-type="tu_boolean" type="button">Конвентор В бул</button></li>
 
                     <button class="instruction" data-block-type="ord" type="button">Ord</button>
 
                     <button class="instruction" data-block-type="char" type="button">Char</button>
 
                     <button class="instruction" data-block-type="if" type="button">If</button>
+                    <li><button class="instruction" data-block-type="if" type="button">Блок If</button></li>
 
-                    <button class="instruction" data-block-type="else" type="button">Else</button>
+                    <li><button class="instruction" data-block-type="else" type="button">Блок Else</button></li>
 
-                    <button class="instruction" data-block-type="while" type="button">Цикл While</button>
+                    <li><button class="instruction" data-block-type="while" type="button">Цикл While</button></li>
 
-                    <button class="instruction" data-block-type="for" type="button">Цикл For</button>
+                    <li><button class="instruction" data-block-type="for" type="button">Цикл For</button></li>
 
-                    <button class="instruction" data-block-type="array" type="button">Создать Массив</button>
+                    <li><button class="instruction" data-block-type="array" type="button">Создать Массив</button></li>
 
-                    <button class="instruction" data-block-type="slice" type="button">Срез Массива/Строки</button>
+                    <li><button class="instruction" data-block-type="output" type="button">Вывод</button></li>
 
-                    <button class="instruction" data-block-type="output" type="button">Вывод</button>
+                    <li><button class="instruction" data-block-type="function" type="button">Создать Функцию</button></li>
 
-                    <button class="instruction" data-block-type="function" type="button">Создать Функцию</button>
+                    <li><button class="instruction" data-block-type="return" type="button">Return</button></li>
 
-                    <button class="instruction" data-block-type="return" type="button">Return</button>
+                    <li><button class="instruction" data-block-type="call" type="button">Вызов Функции</button></li>
 
-                    <button class="instruction" data-block-type="call" type="button">Вызов Функции</button>
+                    <li><button class="instruction" data-block-type="nothing" type="button">😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️</button></li>
 
-                    <button class="instruction" data-block-type="nothing" type="button">😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️</button>
-
-                </div>
+                </ul>
 
             </div>
 
@@ -85,7 +84,7 @@
                 <h4>Консоль:</h4>
                 <div id="console-log" class="debug-content"></div>
             </div>
-        </div>
+        </section>
     </div>
 
     <script type='module' src="CreateInstructionBlock.js"></script>

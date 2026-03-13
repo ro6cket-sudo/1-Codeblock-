@@ -41,23 +41,27 @@ export function addBlockAtPosition(type, targetPlaceholder) {
     const codeBlock = new CodeBlock(id, type);
     blocks.set(id, codeBlock);
 
-    if (['if', 'while', 'for', 'else', 'function'].includes(type)) {
-        const endId = crypto.randomUUID();
-        const endBlock = new CodeBlock(endId, 'end');
-        endBlock.parentID = id;
-        blocks.set(endId, endBlock);
-        codeBlock.endId = endId;
-    }
+    // if (['if', 'while', 'for', 'else', 'function'].includes(type)) {
+    //     const endId = crypto.randomUUID();
+    //     const endBlock = new CodeBlock(endId, 'end');
+    //     endBlock.parentID = id;
+    //     blocks.set(endId, endBlock);
+    //     codeBlock.endId = endId;
+    // }
 
     const htmlBlock = createHTMLInstructionBlock(codeBlock);
     htmlBlock.dataset.id = id;
 
-    if (codeBlock.endId) {
+    if (['if', 'while', 'for', 'else', 'function'].includes(type)) {
         const footer = htmlBlock.querySelector('.block-footer');
-        if (footer) {
-            footer.dataset.id = codeBlock.endId;
-        }
     }
+
+    // if (codeBlock.endId) {
+    //     const footer = htmlBlock.querySelector('.block-footer');
+    //     if (footer) {
+    //         footer.dataset.id = codeBlock.endId;
+    //     }
+    // }
 
     if (type !== 'else') {
         addEvents(codeBlock, htmlBlock);
