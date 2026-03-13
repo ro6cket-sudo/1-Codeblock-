@@ -38,10 +38,10 @@ body.dragging {
     flex-direction: column;
     align-items: stretch;
     width: 100%;
-    padding: 0 !important;
-    background: transparent !important;
-    border: none !important;
-    gap: 5px !important;
+    padding: 0;
+    background: transparent;
+    border: none;
+    gap: 5px;
 }
 
 .block-header {
@@ -98,10 +98,6 @@ body.dragging {
 
 .nested-workspace .block, .workspace .block{
     pointer-events: auto;
-}
-
-.block[data-type="function"] .nested-workspace {
-    border-left: 6px solid #ffb300;
 }
 
 .toolbar{
@@ -163,6 +159,8 @@ body.dragging {
 .instructions {
     display: flex;
     flex-direction: column;
+    list-style: none;
+    padding-left: 0;
     gap: 20px;
 }
 
@@ -249,7 +247,7 @@ body.dragging {
 }
 
 .dragging {
-    cursor: grabbing !important;
+    cursor: grabbing;
 }
 
 .ghost * {
@@ -319,7 +317,10 @@ body.dragging {
 .block-boolean,
 .block-assignment,
 .block-output,
-.block[data-type="array"] {
+.block-array, 
+.block-ceil, 
+.block-floor, 
+.block-round {
     border-radius: 15px;
     padding: 10px 15px;
     display: flex;
@@ -358,12 +359,40 @@ body.dragging {
     flex-grow: 1;
 }
 
-.block-variable .input-container,
-.block-string .input-container,
-.block-boolean .input-container,
-.block-assignment .input-container,
-.block-output .input-container,
-.block[data-type="array"] .input-container {
+.block-convertor.type-number {
+    background-color: #b2f2bb;
+    border-color: #51cf66;
+}
+
+.block-convertor.type-string {
+    background-color: #d550fd;
+    border-color: #9939b7;
+}
+
+.block-convertor.type-boolean {
+    background-color: #ff00dd;
+    border-color: #bd03a4;
+}
+
+.function-header, .function-footer {
+    background-color: #ff9800 !important;
+    border-color: #e65100 !important;
+}
+
+.function-nested-workspace {
+    border-left: 6px solid #ffb300;
+}
+
+.function-nested-workspace .nested-workspace {
+    border-left: 6px solid #04cafc50;
+}
+
+.block-ceil, .block-floor, .block-round {
+    background-color: #96f2d7;
+    border: 2px solid #3ddaab;
+}
+
+.input-container-base {
     background-color: #495057;
     padding: 3px;
     border-radius: 8px;
@@ -371,12 +400,7 @@ body.dragging {
     overflow: hidden;
 }
 
-.block-variable input,
-.block-string input,
-.block-boolean input,
-.block-assignment input,
-.block-output input,
-.block[data-type="array"] input {
+.input-base {
     width: 100%;
     border: none;
     border-radius: 5px;
@@ -527,8 +551,7 @@ body.dragging {
 }
 
 .block-convertor {
-    background-color: #a9cc00;
-    border: 2px solid #627500;
+    border: 2px solid;
     border-radius: 15px;
     padding: 10px 15px;
     display: flex;
@@ -537,25 +560,16 @@ body.dragging {
     min-width: 200px;
 }
 
-.block[data-type="array"]{
+.block-array{
     background-color: #99e9f2;
     border: 1px solid #81dce8;
-}
-
-.block[data-type="input"]{
-    background-color: #04cafc;
-    border: 1px solid #eb04fc;
 }
 
 .block:not(.block-nothing):hover {
     filter: brightness(1.1);
 }
 
-.block[data-type="if"] .condition-header,
-.block[data-type="while"] .condition-header,
-.block[data-type="else"] .condition-header,
-.block[data-type="for"] .condition-header,
-.block[data-type="function"] .condition-header {
+.container-block .condition-header {
     background-color: #8fd3ff; 
     border: 1px solid #3b87c8;
     border-radius: 18px;
@@ -565,7 +579,6 @@ body.dragging {
     align-self: flex-start;
     margin-left: 0;
     gap: 12px;
-
     min-width: 220px;
     width: auto;
 }
@@ -611,7 +624,7 @@ body.dragging {
 }
 
 .trash-button.hover {
-    background-color: #ff0000 !important;
+    background-color: #ff0000;
     transform: scale(1.2);
 }
 
