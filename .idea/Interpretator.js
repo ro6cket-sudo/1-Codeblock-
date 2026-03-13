@@ -3,6 +3,13 @@ import { Parser } from './parser.js';
 import { logger } from './ConsoleLogger.js';
 import { Evaluator } from './Evaluator.js';
 
+
+class ReturnException {
+    constructor(value) {
+        this.value = value;
+    }
+}
+
 export class Interpretator {
     variables = {};
     functions = {};
@@ -214,7 +221,9 @@ export class Interpretator {
                 }
             }
         } catch (error) {
-            block.classList.add('error');
+            if (!(error instanceof ReturnException)) {
+                block.classList.add('error');
+            }
             throw error;
         }
     }
@@ -602,7 +611,7 @@ export class Interpretator {
 
         const funcName = match[1];
         const argsString = match[2];
-        const args = argsString ? argsString.split(',').map(s => this.evaluateExpression(s.trim())) : [];
+        const args = argsString ? splitArgs(argsString).map(s => this.evaluateExpression(s.trim())) : [];
 
         if (!(funcName in this.functions)) {
             throw new Error(`Функция ${funcName} не найдена`);
@@ -773,8 +782,22 @@ export class Interpretator {
     }
 }
 
-class ReturnException {
-    constructor(value) {
-        this.value = value;
+function splitArgs(str) {
+    const args = [];
+    let depth = 0;
+    let start = 0;
+
+    for (let i = 0; i < str.length; i++) {
+        if (str[i] === '(') depth++;
+        else if (str[i] === ')') depth--;
+        else if (str[i] === ',' && depth === 0) {
+            args.push(str.slice(start, i).trim());
+            start = i + 1;
+        }
     }
+
+    const last = str.slice(start).trim();
+    if (last) args.push(last);
+
+    return args;
 }
