@@ -266,6 +266,26 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
                 `;
             break;
         }
+
+        case 'char': {
+            block.classList.add('block-convertor');
+            block.innerHTML = `
+                <span class="label">chr</span>
+                <div class="input-container var-name-frame">
+                    <input type="text" class="variable-input convector-var-input" autocomplete="off" list="variables-list">
+                </div>`;
+            break;
+        }
+
+        case 'ord': {
+            block.classList.add('block-convertor');
+            block.innerHTML = `
+                <span class="label">ord</span>
+                <div class="input-container var-name-frame">
+                    <input type="text" class="variable-input convector-var-input" autocomplete="off" list="variables-list">
+                </div>`;
+            break;
+        }
     }
     
     return block;

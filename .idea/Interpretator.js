@@ -212,6 +212,16 @@ export class Interpretator {
                     break;
                 }
 
+                case 'char':{
+                    this.executeChar(block);
+                    break;
+                }
+
+                case 'ord':{
+                    this.executeOrd(block);
+                    break;
+                }
+
                 default: {
                     throw new Error(`Неизвестный тип блока ${blockType}`);
                 }
@@ -790,6 +800,40 @@ export class Interpretator {
         const result = tartgetValue.slice(start, finish);
 
         this.variables[rusltName] = result;
+    }
+
+    executeChar(block) {
+        const input = block.querySelector('.convector-var-input');
+        const vari = input.value.trim();
+
+        if  (!(vari in this.variables)) {
+            throw new Error(`Переменная ${vari} не найдена`);
+        }
+
+        const value = this.variables[vari];
+
+        if (!Number.isFinite(value)) {
+            throw new Error(`Переменная должна быть числом`)
+        }
+
+        this.variables[vari] = String.fromCharCode(value);
+    }
+
+    executeOrd(block) {
+        const input = block.querySelector('.convector-var-input');
+        const vari = input.value.trim();
+
+        if  (!(vari in this.variables)) {
+            throw new Error(`Переменная ${vari} не найдена`);
+        }
+
+        const value = this.variables[vari];
+
+        if (typeof value !== 'string' || value.length !== 1) {
+            throw new Error(`Переменная должна быть символом`);
+        }
+
+        this.variables[vari] = value.charCodeAt(0);
     }
 }
 
