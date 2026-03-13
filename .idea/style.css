@@ -785,3 +785,135 @@ body.dragging {
         width: 100%;
     }
 }
+
+
+
+#user-presets-panel {
+    display: none;
+    position: fixed;
+    top: 60px;
+    right: 10px;
+    width: 280px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px;
+    z-index: 500;
+    box-shadow: 0 4px 16px #00000026;
+}
+
+#user-presets-panel.visible {
+    display: block;
+}
+
+.user-presets-header h4 {
+    margin: 0;
+    font-size: 15px;
+}
+
+.user-presets-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#close-presets-panel {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #666;
+    padding: 0 4px;
+}
+
+.user-presets-save {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+#preset-name-input {
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 5px 8px;
+    font-size: 13px;
+    outline: none;
+}
+
+#preset-name-input:focus {
+    border-color: #279279;
+}
+
+#confirm-save-preset {
+    background-color: #279279;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+#confirm-save-preset:hover {
+    background-color: #127678;
+}
+
+#user-preset-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.no-presets {
+    color: #999;
+    font-size: 13px;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.user-preset-item {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.user-preset-load {
+    flex: 1;
+    background-color: #333951;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 13px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-preset-load:hover {
+    background-color: #444444;
+}
+
+.user-preset-delete {
+    background-color: #fffddd;
+    color: #ffd000;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 8px;
+    cursor: pointer;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.user-preset-delete:hover {
+    background-color: #ccc000;
+    color: #fff;
+}
