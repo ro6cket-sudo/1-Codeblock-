@@ -162,7 +162,7 @@ export class Parser {
 
                 while (this.currentToken.type !== TokensTypes.CLOSEPARENTHIST && this.currentToken.type !== TokensTypes.ENDOFEXPRESS) {
                     args.push(this.parseOR());
-                    if (this.currentToken.type == TokensTypes.COMMA)  {
+                    if (this.currentToken.type === TokensTypes.COMMA)  {
                         this.NextToken();
                     }
                 }

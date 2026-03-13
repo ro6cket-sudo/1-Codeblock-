@@ -95,7 +95,6 @@ function addEvents(block, htmlBlock) {
 
     input.addEventListener('input', function(e) {
         block.parameters['value'] = e.target.value;
-        console.log(block.parameters['value']);
     })
 }
 
@@ -164,5 +163,3 @@ document.addEventListener('focusin', (e) => {
         updateVariablesDatalist();
     }
 });
-
-window.g = () => console.table(Array.from(blocks.values()), ['id', 'type'])

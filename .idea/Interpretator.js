@@ -101,8 +101,7 @@ export class Interpretator {
             throw new Error('Некорректный ввод функции');
         }
 
-        const funcName = match[1];
-        const argsString = match[2];
+        const [, funcName, argsString] = match;
         const args = argsString ? splitArgs(argsString).map(s => this.evaluateExpression(s.trim())) : [];
 
         if (!(funcName in this.functions)) {
@@ -394,8 +393,7 @@ export class Interpretator {
         const arrayMatch = left.match(/^([a-zA-Z_][a-zA-Z0-9]*)\[(.+)\]$/);
 
         if (arrayMatch) {
-            const arrayName = arrayMatch[1];
-            const indexExpression = arrayMatch[2];
+            const [, arrayName, indexExpression] = arrayMatch;
 
             if (!(arrayName in this.variables)) throw new Error(`Массив ${arrayName} не обнаружен`);
             if (!Array.isArray(this.variables[arrayName])) throw new Error(`${arrayName} не является массивом`);
@@ -713,8 +711,7 @@ export class Interpretator {
             throw new Error('Некорректный ввод функции');
         }
 
-        const funcName = match[1];
-        const argsString = match[2];
+        const [, funcName, argsString] = match;
         const args = argsString ? splitArgs(argsString).map(s => this.evaluateExpression(s.trim())) : [];
 
         if (!(funcName in this.functions)) {
@@ -909,13 +906,13 @@ export class Interpretator {
         }
 
         if (!(rusltName in this.variables)) {
-            throw new Error(`Переменная для результата ${varInput} не найдена`);
+            throw new Error(`Переменная для результата ${rusltName} не найдена`);
         }
 
         const tartgetValue = this.variables[targetName];
 
         if (typeof tartgetValue !== 'string' && !Array.isArray(tartgetValue)) {
-            throw new Error(`Переменная ${targetInput} не является ни строкой, ни массивом`)
+            throw new Error(`Переменная ${targetName} не является ни строкой, ни массивом`)
         }
 
         const start = startExpression ? this.evaluateExpression(startExpression) : undefined;

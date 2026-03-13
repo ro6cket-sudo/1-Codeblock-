@@ -67,14 +67,14 @@ workspace.addEventListener('mousedown', (e) => {
 
         if (next && next.dataset.type === 'else') {
             draggedElse = next;
-            draggedElse.style.display = 'none';
+            draggedElse.classList.add('block-hidden');
         }
     }
 
     ghost = block.cloneNode(true);
     setupGhost(ghost, e.pageX, e.pageY);
 
-    block.style.display = 'none';
+    block.classList.add('block-hidden');
     block.parentNode.insertBefore(placeholder, block);
 
     document.addEventListener('mousemove', onMouseMove);
@@ -87,7 +87,7 @@ function getDragAfterElement(container, y) {
         .filter(el =>
             el.classList.contains('block') &&
             !el.classList.contains('ghost') &&
-            el.style.display !== 'none'
+            !el.classList.contains('block-hidden')
         );
 
     if (currentType === 'else') {
@@ -138,11 +138,7 @@ function getDragAfterElement(container, y) {
 
 
 function setupGhost(ghostEl, x, y) {
-    ghostEl.classList.add('ghost');
-    ghostEl.style.position = 'fixed';
-    ghostEl.style.pointerEvents = 'none';
-    ghostEl.style.opacity = '0.6';
-    ghostEl.style.zIndex = '1000';
+    ghostEl.classList.add('ghost', 'ghost-dragging');
 
     document.body.appendChild(ghostEl);
     moveAt(x, y);
@@ -249,8 +245,6 @@ function onMouseUp(e) {
             }
 
             removeBlockWithNestedWorkspace(draggedBlock);
-
-            console.table(Array.from(blocks.values()), ['id', 'type'])
         }
         if (placeholder.parentNode) placeholder.remove();
     }
@@ -259,7 +253,6 @@ function onMouseUp(e) {
             if (placeholder.parentNode) {
                 addBlockAtPosition(currentType, placeholder);
                 currentType = null;
-                console.table(Array.from(blocks.values()), ['id', 'type'])
             }
         } else if (draggingMode === 'move') {
             if (placeholder.parentNode) {
@@ -268,23 +261,21 @@ function onMouseUp(e) {
 
                 if (draggedElse) {
                     newContainer.insertBefore(draggedElse, draggedBlock.nextSibling);
-                    draggedElse.style.display = '';
                 }
                 
                 updateNestedContainer(origContainer);
                 updateNestedContainer(newContainer);
             }
 
-            draggedBlock.style.display = '';
+            draggedBlock.classList.remove('block-hidden');
 
             if (draggedElse) {
-                draggedElse.style.display = '';
+                draggedElse.classList.remove('block-hidden');
                 draggedElse = null;
             }
 
             placeholder.remove();
             sortBlocks();
-            console.table(Array.from(blocks.values()), ['id', 'type'])
         }
     }
 

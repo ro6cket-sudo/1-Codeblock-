@@ -308,6 +308,13 @@ body.dragging {
     pointer-events: none;
 }
 
+.ghost-dragging {
+    position: fixed;
+    pointer-events: none;
+    opacity: 0.6;
+    z-index: 1000;
+}
+
 .block .instruction {
     user-select: none;
 }
