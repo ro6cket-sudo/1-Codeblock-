@@ -68,52 +68,17 @@ function runProgram() {
 
     document.querySelectorAll('.block.error').forEach(block => block.classList.remove('error'));
 
-    // blocks.forEach((block, index) => {
-        // try {
-        //     let code = "";
-        //
-        //     if (block.classList.contains('block-output')) {
-        //         const inputVal = block.querySelector('.output-input').value;
-        //         code += `output ${inputVal} `;
-        //         code = `output ${inputVal}`;
-        //     }
-        //     else if (block.classList.contains('block-variable')) {
-        //         const name = block.querySelector('.var-name').value;
-        //         const value = block.querySelector('.var-value').value;
-        //         code = `${name} = ${value}`;
-        //     }
-        //
-        //     if (code) {
-        //         const lexer = new Lexer(code);
-        //         const tokens = lexer.Analys();
-        //
-        //         const parser = new Parser(tokens);
-        //         const ast = parser.parse();
-        //
-        //         interpretator.evaluate(ast);
-        //     }
-        //
-        // } catch (error) {
-        //     logger.error(`Ошибка в блоке #${index + 1}: ${error.message}`);
-        // }
-    // });
-
     try{
         interpretator.executeAll(workspace);
         logger.log("Программа завершена.", "success");
     }
     catch(err){
         logger.error(err);
-        console.error(err);
+        // console.error(err);
     }
     finally {
         interpretator = null;
     }
-
-
-    // interpretator.executeAll(workspace);
-    //
-    // logger.log("Программа завершена.", "success");
 }
 
 function showVariablesPanel() {
