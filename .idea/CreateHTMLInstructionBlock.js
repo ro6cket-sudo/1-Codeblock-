@@ -140,8 +140,8 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             block.classList.add('block-convertor','type-number');
             block.innerHTML =  `
                 <span class="tu_number-label">Convert To Number</span>
-                <div class="input-container var-name-frame">
-                    <input type="text" class="variable-input convector-var-input" autocomplete="off" list="variables-list">
+                <div class="input-container var-name-frame input-container-base">
+                    <input type="text" class="variable-input convector-var-input input-base" autocomplete="off" list="variables-list">
                 </div>`;
             break;
         }
@@ -150,8 +150,8 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             block.classList.add('block-convertor','type-string');
             block.innerHTML =  `
                 <span class="tu_number-label">Convert To String </span>
-                <div class="input-container var-name-frame">
-                    <input type="text" class="variable-input convector-var-input" autocomplete="off" list="variables-list">
+                <div class="input-container var-name-frame input-container-base">
+                    <input type="text" class="variable-input convector-var-input input-base" autocomplete="off" list="variables-list">
                 </div>`;
             break;
         }
@@ -160,8 +160,8 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             block.classList.add('block-convertor','type-boolean');
             block.innerHTML =  `
                 <span class="tu_number-label">Convert To Bool</span>
-                <div class="input-container var-name-frame">
-                    <input type="text" class="variable-input convector-var-input" autocomplete="off" list="variables-list">
+                <div class="input-container var-name-frame input-container-base">
+                    <input type="text" class="variable-input convector-var-input input-base" autocomplete="off" list="variables-list">
                 </div>`;
             break;
         }
@@ -184,7 +184,7 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
                     <input type="text" class="array-name-input input-base" placeholder="имя">
                 </div>
                 <div class="input-container input-container-base">
-                    <input type="text" class="array-size-input input-base" placeholder="размер">
+                    <input type="number" class="array-size-input input-base" placeholder="размер">
                 </div>
             `;
             break;
@@ -199,8 +199,8 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             block.innerHTML = `
                 <div class="block-header condition-header function-header">
                     <h4 class="blockName">function</h4>
-                    <input class="function-name-input" placeholder="имя">
-                    <input class="function-params-input" placeholder="параметры через запятую">
+                    <input class="function-name-input input-base" placeholder="имя">
+                    <input class="function-params-input input-base" placeholder="параметры через запятую">
                 </div>
                 ${!isGhost ? 
                     '<div class="nested-workspace function-nested-workspace"></div>' +
@@ -239,12 +239,12 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
                 
                 <span class="label">[</span>
                 <div class="input-container">
-                    <input type="text" class="slice-start-index" placeholder="от">
+                    <input type="number" class="slice-start-index" placeholder="от">
                 </div>
                 
                 <span class="label">]</span>
                 <div class="input-container">
-                    <input type="text" class="slice-finish-index" placeholder="до">
+                    <input type="number" class="slice-finish-index" placeholder="до">
                 </div>
                 
                 <span class="label">Slice</span>
@@ -256,21 +256,21 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
         }
 
         case 'char': {
-            block.classList.add('block-convertor');
+            block.classList.add('block-char');
             block.innerHTML = `
                 <span class="label">chr</span>
-                <div class="input-container var-name-frame">
-                    <input type="text" class="variable-input convector-var-input" autocomplete="off" list="variables-list">
+                <div class="input-container var-name-frame input-container-base">
+                    <input type="text" class="variable-input convector-var-input input-base" autocomplete="off" list="variables-list">
                 </div>`;
             break;
         }
 
         case 'ord': {
-            block.classList.add('block-convertor');
+            block.classList.add('block-ord');
             block.innerHTML = `
                 <span class="label">ord</span>
-                <div class="input-container var-name-frame">
-                    <input type="text" class="variable-input convector-var-input" autocomplete="off" list="variables-list">
+                <div class="input-container var-name-frame input-container-base">
+                    <input type="text" class="variable-input convector-var-input input-base" autocomplete="off" list="variables-list">
                 </div>`;
             break;
         }
