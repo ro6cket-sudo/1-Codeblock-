@@ -118,7 +118,7 @@ export class Parser {
     parseLiteral() {
         if(this.currentToken.type === TokensTypes.OPENPARENTHIST){
             this.NextToken();
-            let node = this.parseExpression();
+            let node = this.parseOR();
             if (this.currentToken.type === TokensTypes.CLOSEPARENTHIST) {
                 this.NextToken();
                 return node;
