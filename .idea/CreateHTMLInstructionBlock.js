@@ -240,6 +240,32 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             `;
             break;
         }
+
+        case 'slice': {
+            block.classList.add('block-slice');
+            block.innerHTML = `
+                <span class="label">Slice</span>
+                <div class="input-container">
+                    <input type="text" class="slice-target" placeholder="имя (что режем)" autocomplete="off" list="variables-list">
+                </div>
+                
+                <span class="label">[</span>
+                <div class="input-container">
+                    <input type="text" class="slice-start-index" placeholder="от">
+                </div>
+                
+                <span class="label">]</span>
+                <div class="input-container">
+                    <input type="text" class="slice-finish-index" placeholder="до">
+                </div>
+                
+                <span class="label">Slice</span>
+                <div class="input-container">
+                    <input type="text" class="slice-result" placeholder="имя (куда сохранить)" autocomplete="off" list="variables-list">
+                </div>
+                `;
+            break;
+        }
     }
     
     return block;

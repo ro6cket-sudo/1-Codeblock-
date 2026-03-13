@@ -436,6 +436,31 @@ body.dragging {
     margin-left: 10px;
 }
 
+.block-slice {
+    background-color: #ffd8a8;
+    border: 2px solid #de9950;
+    border-radius: 15px;
+    padding: 2px 8px;
+    display: flex;
+}
+
+.block-slice:hover {
+    background-color: #de9950;
+}
+
+.block-slice:focus {
+    border-color: #de9950;
+}
+
+.block-slice .input-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
+}
+
+
+
 .block-return {
     background-color: #ff5252;
     border: 2px solid #c62828;
