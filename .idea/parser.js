@@ -93,7 +93,7 @@ export class Parser {
 
     parseMultiplication() {
         let node = this.parseUnaryOperation();
-        while (this.currentToken.type === TokensTypes.OPERATION && ['*', '/', '%'].includes(this.currentToken.value)) {let operation = this.currentToken.value;
+        while (this.currentToken.type === TokensTypes.OPERATION && ['*', '/', '%', '//'].includes(this.currentToken.value)) {
             let oper = this.currentToken.value;
             this.NextToken();
             node = new BinaryOperationNode(oper, node, this.parseUnaryOperation());

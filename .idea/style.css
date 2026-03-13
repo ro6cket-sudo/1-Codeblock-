@@ -194,6 +194,7 @@ body.dragging {
     align-items: flex-start;
     gap: 5px;
     padding: 10px;
+    padding-bottom: 20vh;
     min-height: 0;
     border-radius: 10px;
     flex-grow: 1;
@@ -267,7 +268,7 @@ body.dragging {
 
 .block-nothing {
     width: 100%;
-    min-width: 400px;
+    min-width: 200px !important;
     min-height: 20px;
     background-color: transparent;
     border: 2px dashed transparent;

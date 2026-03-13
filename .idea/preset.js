@@ -65,13 +65,13 @@ function makeOutput(expression, container = workspace) {
     return el;
 }
 
-function makeNothingBlock(container = workspace) {
+function makeNothingBlock(container) {
     return makeBlock('nothing', container);
 }
 
-function makeNothing(n = 1) {
+function makeNothing(n = 1, container = workspace) {
     for (let i = 0; i < n; i++) {
-        makeNothingBlock();
+        makeNothingBlock(container);
     }
 }
 
@@ -155,6 +155,115 @@ export function presetGCD() {
     sortBlocks();
 }
 
+export function presetMergeSort() {
+    clearAllBlocks();
 
+    makeArray('arr', '8');
+
+    makeNothing(1);
+
+    makeAssignment('arr[0]', '5');
+    makeAssignment('arr[1]', '2');
+    makeAssignment('arr[2]', '7');
+    makeAssignment('arr[3]', '1');
+    makeAssignment('arr[4]', '3');
+    makeAssignment('arr[5]', '8');
+    makeAssignment('arr[6]', '4');
+    makeAssignment('arr[7]', '6');
+
+    makeNothing(2);
+    
+    const functionNested1 = makeFunction('Merge', 'left, mid, right')
+    makeArray('temp', '8', functionNested1);
+    makeVariable('i, j, k', functionNested1);
+
+    makeNothing(1, functionNested1);
+
+    makeAssignment('i', 'left', functionNested1);
+    makeAssignment('j', 'mid + 1', functionNested1);
+    makeAssignment('k', 'left', functionNested1);
+
+    makeNothing(1, functionNested1);
+
+    const whileBlock1 = makeBlock('while', functionNested1);
+    whileBlock1.querySelector('.code-input').value = 'i <= mid and j <= right';
+    const whileNested1 = whileBlock1.querySelector('.nested-workspace');
+
+    const ifBlock1 = makeBlock('if', whileNested1);
+    ifBlock1.querySelector('.code-input').value = 'arr[i] <= arr[j]';
+    const ifNested1 = ifBlock1.querySelector('.nested-workspace');
+
+    makeAssignment('temp[k]', 'arr[i]', ifNested1);
+    makeAssignment('i', 'i + 1', ifNested1);
+
+    const elseBlock = makeBlock('else', whileNested1);
+    const elseNested = elseBlock.querySelector('.nested-workspace');
+    makeAssignment('temp[k]', 'arr[j]', elseNested);
+    makeAssignment('j', 'j + 1', elseNested);
+
+    makeAssignment('k', 'k + 1', whileNested1);
+
+    makeNothing(1, functionNested1);
+
+    const whileBlock2 = makeBlock('while', functionNested1);
+    whileBlock2.querySelector('.code-input').value = 'i <= mid';
+    const whileNested2 = whileBlock2.querySelector('.nested-workspace');
+    
+    makeAssignment('temp[k]', 'arr[i]', whileNested2);
+    makeAssignment('i', 'i + 1', whileNested2);
+    makeAssignment('k', 'k + 1', whileNested2);
+
+    makeNothing(1, functionNested1);
+
+    const whileBlock3 = makeBlock('while', functionNested1);
+    whileBlock3.querySelector('.code-input').value = 'j <= right';
+    const whileNested3 = whileBlock3.querySelector('.nested-workspace');
+
+    makeAssignment('temp[k]', 'arr[j]', whileNested3);
+    makeAssignment('j', 'j + 1', whileNested3);
+    makeAssignment('k', 'k + 1', whileNested3);
+
+    makeNothing(1, functionNested1);
+
+    makeVariable('idx', functionNested1);
+    makeAssignment('idx', 'left', functionNested1);
+
+    makeNothing(1, functionNested1);
+
+    const whileBlock4 = makeBlock('while', functionNested1);
+    whileBlock4.querySelector('.code-input').value = 'idx <= right';
+    const whileNested4 = whileBlock4.querySelector('.nested-workspace');
+
+    makeAssignment('arr[idx]', 'temp[idx]', whileNested4);
+    makeAssignment('idx', 'idx + 1', whileNested4);
+
+    makeNothing(2);
+
+    const functionNested2 = makeFunction('MergeSort', 'left, right');
+    makeVariable('mid', functionNested2);
+    
+    const ifBlock2 = makeBlock('if', functionNested2);
+    ifBlock2.querySelector('.code-input').value = 'left < right';
+    const ifNested2 = ifBlock2.querySelector('.nested-workspace');
+
+    makeAssignment('mid', '(left + right) // 2', ifNested2);
+    makeCall('MergeSort(left, mid)', ifNested2);
+    makeCall('MergeSort(mid + 1, right)', ifNested2);
+    makeCall('Merge(left, mid, right)', ifNested2);
+
+    makeNothing(2);
+
+    makeCall('MergeSort(0, 7)');
+
+    makeNothing(1);
+
+    const nested2 = makeFor('i = 0', 'i < 8', 'i + 1');
+
+    makeOutput('arr[i]', nested2);
+
+    sortBlocks();
+}
+
+document.getElementById('preset-merge-sort').addEventListener('click', presetMergeSort);
 document.getElementById('preset-bubble-sort').addEventListener('click', presetBubbleSort);
 document.getElementById('preset-gcd').addEventListener('click', presetGCD);

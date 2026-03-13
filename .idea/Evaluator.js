@@ -122,6 +122,9 @@ export class Evaluator {
             case '/':
                 if (right === 0) throw new Error("Деление на 0");
                 return left / right;
+            case '//':
+                if (right === 0) throw new Error("Деление на 0");
+                return Math.floor(left / right);
             case '%':
                 if (right === 0) throw new Error("Остаток от деления на 0");
                 return left % right;
@@ -144,7 +147,7 @@ export class Evaluator {
                 return left !== right;
             case '+':
                 return left + right;
-           default: throw new Error(`Оператор ${operator} не поддерживается для строк`)
+            default: throw new Error(`Оператор ${operator} не поддерживается для строк`)
         }
     }
 
