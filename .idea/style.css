@@ -20,19 +20,6 @@ body.dragging {
     min-height: 0;
 }
 
-.else-label {
-    background-color: #04cafc;
-    border: 1px solid #eb04fc;
-    padding: 5px 10px;
-    width: fit-content;
-    border-radius: 0 5px 5px 0;
-    font-weight: bold;
-    font-size: 14px;
-    pointer-events: none;
-
-    align-self: flex-start;
-}
-
 .container-block {
     display: flex;
     flex-direction: column;

@@ -2,6 +2,8 @@ import { Interpretator } from './Interpretator.js';
 import { logger } from './ConsoleLogger.js';
 
 let interpretator = null;
+const debugButton = document.getElementById('debug-button');
+const stepButton = document.getElementById('step-button');
 
 function updateVar(variables) {
     const var_list = document.getElementById('var-list');
@@ -28,10 +30,19 @@ async function debug() {
             interpretator.stepPermit();
         }
         interpretator = null;
+
+        debugButton.textContent = 'Запустить Отладку';
+        debugButton.style.backgroundColor="";
+        stepButton.style.display = 'none';
+
         await new Promise(r => setTimeout(r, 50));
         document.querySelectorAll('.debug').forEach(b => b.classList.remove('debug'));
         return;
     }
+
+    debugButton.textContent = "Завершить Отладку";
+    debugButton.style.backgroundColor="#ff4d4d";
+    stepButton.style.display = 'inline-block';
 
     showVariablesPanel();
     logger.clear();
@@ -52,7 +63,10 @@ async function debug() {
         console.error(error);
     }
     finally {
-        interpretator = null
+        interpretator = null;
+        debugButton.textContent = 'Запустить Отладку';
+        debugButton.style.backgroundColor="";
+        stepButton.style.display = 'none';
     }
 }
 
@@ -77,7 +91,6 @@ function runProgram() {
     hideVariablesPanel();
     logger.clear();
     logger.log("Запуск программы...", "success");
-    // const blocks = document.querySelectorAll('.workspace .block');
     const workspace = document.querySelector('.workspace');
     
     const globalVariables = {};
@@ -91,7 +104,6 @@ function runProgram() {
     }
     catch(err){
         logger.error(err);
-        // console.error(err);
     }
     finally {
         interpretator = null;
