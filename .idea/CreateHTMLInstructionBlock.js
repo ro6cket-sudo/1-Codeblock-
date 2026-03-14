@@ -233,23 +233,23 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
             block.classList.add('block-slice');
             block.innerHTML = `
                 <span class="label">Slice</span>
-                <div class="input-container">
-                    <input type="text" class="slice-target" placeholder="имя (что режем)" autocomplete="off" list="variables-list">
+                <div class="input-container input-container-base">
+                    <input type="text" class="slice-target input-base" placeholder="имя (что режем)" autocomplete="off" list="variables-list">
                 </div>
                 
                 <span class="label">[</span>
-                <div class="input-container">
-                    <input type="number" class="slice-start-index" placeholder="от">
+                <div class="input-container input-container-base">
+                    <input type="number" class="slice-start-index input-base" placeholder="от">
                 </div>
                 
                 <span class="label">]</span>
-                <div class="input-container">
-                    <input type="number" class="slice-finish-index" placeholder="до">
+                <div class="input-container input-container-base">
+                    <input type="number" class="slice-finish-index input-base" placeholder="до">
                 </div>
                 
                 <span class="label">Slice</span>
-                <div class="input-container">
-                    <input type="text" class="slice-result" placeholder="имя (куда сохранить)" autocomplete="off" list="variables-list">
+                <div class="input-container input-container-base">
+                    <input type="text" class="slice-result input-base" placeholder="имя (куда сохранить)" autocomplete="off" list="variables-list">
                 </div>
                 `;
             break;
