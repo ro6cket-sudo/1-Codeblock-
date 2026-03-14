@@ -242,12 +242,12 @@ export function createHTMLInstructionBlock(codeBlock, isGhost = false) {
                     <input type="number" class="slice-start-index input-base" placeholder="от">
                 </div>
                 
-                <span class="label">]</span>
+                <span class="label">:</span>
                 <div class="input-container input-container-base">
                     <input type="number" class="slice-finish-index input-base" placeholder="до">
                 </div>
                 
-                <span class="label">Slice</span>
+                <span class="label">]</span>
                 <div class="input-container input-container-base">
                     <input type="text" class="slice-result input-base" placeholder="имя (куда сохранить)" autocomplete="off" list="variables-list">
                 </div>
